@@ -1,0 +1,31 @@
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold">Fee Schedules</h1>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Exchange</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Maker</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Taker</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Type</th>
+          <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @exchange_fees.each do |fee| %>
+          <tr>
+            <td class="px-4 py-3 font-medium"><%= fee.exchange_name.titleize %></td>
+            <td class="px-4 py-3"><%= number_to_percentage(fee.maker_rate * 100) %></td>
+            <td class="px-4 py-3"><%= number_to_percentage(fee.taker_rate * 100) %></td>
+            <td class="px-4 py-3"><%= fee.spread_based? ? "Spread" : "Percentage" %></td>
+            <td class="px-4 py-3 text-right space-x-2">
+              <%= link_to "Edit", edit_exchange_fee_path(fee), class: "text-blue-600 hover:underline" %>
+              <%= button_to "Sync", sync_exchange_fee_path(fee), method: :post, class: "text-green-600 hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
