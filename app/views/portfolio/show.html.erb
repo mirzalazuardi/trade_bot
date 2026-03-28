@@ -1,0 +1,66 @@
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold">Portfolio</h1>
+
+  <% if @positions.empty? %>
+    <p class="text-gray-500">No open positions.</p>
+  <% else %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="w-full">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Exchange</th>
+            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Pair</th>
+            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Side</th>
+            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Quantity</th>
+            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Entry Price</th>
+            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Current Price</th>
+            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">PnL</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @positions.each do |exchange, positions| %>
+            <% positions.each do |position| %>
+              <tr>
+                <td class="px-4 py-3"><%= exchange %></td>
+                <td class="px-4 py-3"><%= position.pair %></td>
+                <td class="px-4 py-3 text-right"><%= position.side %></td>
+                <td class="px-4 py-3 text-right"><%= position.quantity %></td>
+                <td class="px-4 py-3 text-right"><%= position.entry_price %></td>
+                <td class="px-4 py-3 text-right"><%= position.current_price %></td>
+                <td class="px-4 py-3 text-right <%= position.unrealized_pnl.to_f >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                  <%= position.unrealized_pnl %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">PnL by Exchange</h2>
+      <ul class="space-y-1">
+        <% @trades_by_exchange.each do |exchange, pnl| %>
+          <li class="flex justify-between">
+            <span><%= exchange %></span>
+            <span class="<%= pnl.to_f >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= pnl %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-lg font-semibold mb-2">Fees by Exchange</h2>
+      <ul class="space-y-1">
+        <% @fees_by_exchange.each do |exchange, fees| %>
+          <li class="flex justify-between">
+            <span><%= exchange %></span>
+            <span class="text-gray-600"><%= fees %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
