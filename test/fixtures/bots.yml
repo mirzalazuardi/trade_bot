@@ -1,0 +1,17 @@
+one:
+  user: one
+  exchange_name: binance
+  pair: BTC/USDT
+  strategy: rsi_reversal
+  mode: auto
+  status: active
+  ai_enabled: false
+
+two:
+  user: two
+  exchange_name: oanda
+  pair: EUR/USD
+  strategy: macd_crossover
+  mode: semi_auto
+  status: paused
+  ai_enabled: true
