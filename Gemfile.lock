@@ -483,6 +483,7 @@ DEPENDENCIES
   importmap-rails
   kamal
   lightgbm
+  minitest
   onnxruntime
   pg (~> 1.1)
   propshaft

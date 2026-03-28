@@ -1,0 +1,58 @@
+<div class="sm:flex sm:items-center">
+  <div class="sm:flex-auto">
+    <h1 class="text-xl font-semibold text-gray-900">ML Models</h1>
+    <p class="mt-2 text-sm text-gray-700">Manage your machine learning models for signal filtering.</p>
+  </div>
+  <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+    <%= link_to "New ML Model", new_ml_model_path, class: "inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none sm:w-auto" %>
+  </div>
+</div>
+
+<div class="mt-8 flex flex-col">
+  <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+      <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Version</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Type</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Training Date</th>
+              <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <% @ml_models.each do |ml_model| %>
+              <tr>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                  <%= link_to ml_model.name, ml_model_path(ml_model), class: "text-indigo-600 hover:text-indigo-900" %>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= ml_model.version %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= ml_model.model_type %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <span class="inline-flex items-center rounded-md <%= case ml_model.status when 'active' then 'bg-green-50 text-green-700' when 'testing' then 'bg-yellow-50 text-yellow-700' else 'bg-gray-50 text-gray-700' end %> px-2 py-1 text-xs font-medium ring-1 ring-inset <%= case ml_model.status when 'active' then 'ring-green-600/20' when 'testing' then 'ring-yellow-600/20' else 'ring-gray-500/20' end %>">
+                    <%= ml_model.status %>
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= ml_model.training_date&.to_s(:db) %></td>
+                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <%= link_to "Edit", edit_ml_model_path(ml_model), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+                  <%= button_to "Delete", ml_model_path(ml_model), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <% if @ml_models.empty? %>
+          <div class="text-center py-12">
+            <p class="text-sm text-gray-500">No ML models yet. Upload your first model to get started.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

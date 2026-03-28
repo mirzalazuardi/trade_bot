@@ -88,8 +88,8 @@ production:
   primary: &primary_production
     <<: *default
     database: trade_bot_production
-    username: trade_bot
-    password: <%= ENV["TRADE_BOT_DATABASE_PASSWORD"] %>
+    username: hermawan
+    password: password
   cache:
     <<: *primary_production
     database: trade_bot_production_cache

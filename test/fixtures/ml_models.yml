@@ -1,6 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  user: one
   name: test_model
   version: 1
   model_type: lightgbm
@@ -11,6 +12,7 @@ one:
   status: testing
 
 two:
+  user: one
   name: test_model
   version: 2
   model_type: onnx

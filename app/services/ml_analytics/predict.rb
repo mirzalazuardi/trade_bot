@@ -2,6 +2,10 @@ module MlAnalytics
   class Predict
     @@model_cache = {}
 
+    def self.model_cache
+      @@model_cache
+    end
+
     def self.call(bot:, signal:)
       new(bot: bot, signal: signal).predict
     end
@@ -17,12 +21,7 @@ module MlAnalytics
       ml_model = MlModel.find(@bot.ml_model_id)
       return Prediction.new(confidence: 0.5, prediction: "hold", reason: "Model not active") unless ml_model.active?
 
-      features = Features::Pipeline.call(
-        exchange: @bot.exchange_name,
-        pair: @bot.pair,
-        ml_model_id: ml_model.id
-      )
-
+      features = load_features(ml_model)
       return Prediction.new(confidence: 0.5, prediction: "hold", reason: "Insufficient data") if features.nil? || features.empty?
 
       model = load_model(ml_model)
@@ -43,6 +42,14 @@ module MlAnalytics
         confidence: confidence,
         prediction: map_to_signal(confidence),
         reason: "ML prediction: #{confidence.round(2)}"
+      )
+    end
+
+    def load_features(ml_model)
+      Features::Pipeline.call(
+        exchange: @bot.exchange_name,
+        pair: @bot.pair,
+        ml_model_id: ml_model.id
       )
     end
 

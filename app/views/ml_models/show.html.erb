@@ -1,0 +1,70 @@
+<div class="px-4 sm:px-0">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="text-base font-semibold leading-7 text-gray-900">ML Model Details</h3>
+      <p class="mt-1 text-sm text-gray-500">View and manage your machine learning model.</p>
+    </div>
+    <div class="flex gap-2">
+      <% if @ml_model.testing? %>
+        <%= button_to "Activate", activate_ml_model_path(@ml_model), method: :post, class: "inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+      <% end %>
+      <% if @ml_model.active? %>
+        <%= button_to "Retire", retire_ml_model_path(@ml_model), method: :post, class: "inline-flex items-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500" %>
+      <% end %>
+      <%= link_to "Edit", edit_ml_model_path(@ml_model), class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="mt-6 border-t border-gray-100">
+    <dl class="divide-y divide-gray-100">
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Name</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @ml_model.name %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Version</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @ml_model.version %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Type</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @ml_model.model_type %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Status</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+          <span class="inline-flex items-center rounded-md <%= case @ml_model.status when 'active' then 'bg-green-50 text-green-700' when 'testing' then 'bg-yellow-50 text-yellow-700' else 'bg-gray-50 text-gray-700' end %> px-2 py-1 text-xs font-medium ring-1 ring-inset <%= case @ml_model.status when 'active' then 'ring-green-600/20' when 'testing' then 'ring-yellow-600/20' else 'ring-gray-500/20' end %>">
+            <%= @ml_model.status %>
+          </span>
+        </dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Training Date</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @ml_model.training_date&.to_s(:db) %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">File Path</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @ml_model.file_path %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Features</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+          <% if @ml_model.feature_list.present? %>
+            <code class="text-xs bg-gray-100 rounded px-2 py-1"><%= @ml_model.feature_list.to_json %></code>
+          <% else %>
+            <span class="text-gray-400">Not specified</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-900">Performance Metrics</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+          <% if @ml_model.performance_metrics.present? %>
+            <pre class="text-xs bg-gray-100 rounded p-2 overflow-x-auto"><%= JSON.pretty_generate(@ml_model.performance_metrics) %></pre>
+          <% else %>
+            <span class="text-gray-400">No metrics recorded</span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

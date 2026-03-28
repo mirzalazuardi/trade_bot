@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_001100) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_001101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -112,10 +112,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001100) do
     t.enum "status", default: "testing", enum_type: "ml_model_status"
     t.date "training_date"
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.integer "version"
     t.index ["name", "version"], name: "index_ml_models_on_name_and_version", unique: true
     t.index ["status"], name: "index_ml_models_on_status"
     t.index ["training_date"], name: "index_ml_models_on_training_date"
+    t.index ["user_id"], name: "index_ml_models_on_user_id"
   end
 
   create_table "ml_prediction_logs", force: :cascade do |t|
@@ -261,6 +263,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001100) do
   add_foreign_key "approvals", "users"
   add_foreign_key "bots", "users"
   add_foreign_key "exchange_credentials", "users"
+  add_foreign_key "ml_models", "users"
   add_foreign_key "ml_prediction_logs", "bots"
   add_foreign_key "ml_prediction_logs", "ml_models"
   add_foreign_key "ml_prediction_logs", "users"

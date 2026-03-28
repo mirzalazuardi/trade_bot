@@ -1,6 +1,8 @@
 class MlModel < ApplicationRecord
+  belongs_to :user
+
   validates :name, :version, :model_type, presence: true
-  validates :version, uniqueness: { scope: :name }
+  validates :version, uniqueness: { scope: [ :name, :user_id ] }
 
   enum :status, { testing: "testing", active: "active", retired: "retired" }, prefix: true
   enum :model_type, { lightgbm: "lightgbm", onnx: "onnx" }, prefix: true
