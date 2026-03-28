@@ -1,0 +1,29 @@
+one:
+  user: one
+  bot: one
+  order: one
+  exchange_name: binance
+  pair: BTC/USDT
+  side: buy
+  quantity: 0.01
+  entry_price: 50000.00
+  exit_price: 51000.00
+  gross_pnl: 10.00
+  total_fees: 0.50
+  net_pnl: 9.50
+  closed_at: 2026-03-28 12:00:00
+
+two:
+  user: two
+  bot: two
+  order: two
+  exchange_name: oanda
+  pair: EUR/USD
+  side: sell
+  quantity: 1000
+  entry_price: 1.0800
+  exit_price: 1.0850
+  gross_pnl: 50.00
+  total_fees: 0
+  net_pnl: 50.00
+  closed_at: 2026-03-28 12:00:00

@@ -1,0 +1,25 @@
+one:
+  user: one
+  bot: one
+  exchange_name: binance
+  pair: BTC/USDT
+  status: pending
+  order_type: limit
+  quantity: 0.01
+  price: 50000.00
+  estimated_fee: 0.50
+  estimated_fee_currency: USDT
+  side: buy
+
+two:
+  user: two
+  bot: two
+  exchange_name: oanda
+  pair: EUR/USD
+  status: filled
+  order_type: market
+  quantity: 1000
+  price: 1.0850
+  estimated_fee: 0
+  estimated_fee_currency: USD
+  side: buy

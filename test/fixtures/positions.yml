@@ -1,0 +1,23 @@
+one:
+  user: one
+  exchange_name: binance
+  pair: BTC/USDT
+  status: open
+  quantity: 0.01
+  price: 50000.00
+  average_price: 50000.00
+  gross_pnl: 0
+  total_fees: 0
+  net_pnl: 0
+
+two:
+  user: two
+  exchange_name: oanda
+  pair: EUR/USD
+  status: closed
+  quantity: 0
+  price: 1.0850
+  average_price: 1.0800
+  gross_pnl: 50.00
+  total_fees: 0
+  net_pnl: 50.00

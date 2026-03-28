@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: test_model
+  version: 1
+  model_type: lightgbm
+  training_date: 2026-03-28
+  performance_metrics: {}
+  file_path: 
+  feature_list: []
+  status: testing
+
+two:
+  name: test_model
+  version: 2
+  model_type: onnx
+  training_date: 2026-03-27
+  performance_metrics: {}
+  file_path: 
+  feature_list: []
+  status: active
