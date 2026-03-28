@@ -6,3 +6,6 @@ User.find_or_create_by!(email_address: admin_email) do |user|
   user.password_confirmation = admin_password
   puts "Created admin user: #{admin_email}"
 end
+
+ExchangeFee.seed_defaults
+puts "Seeded exchange fee schedules"
