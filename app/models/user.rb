@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :exchange_credentials, dependent: :destroy
   has_many :bots, dependent: :destroy
   has_many :orders, dependent: :destroy
+  has_many :positions, dependent: :destroy
   has_many :trades, dependent: :destroy
   has_many :ml_models, dependent: :destroy
   has_many :ml_prediction_logs, dependent: :destroy
