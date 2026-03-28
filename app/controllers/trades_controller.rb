@@ -1,5 +1,5 @@
 class TradesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
 
   def index
     @trades = current_user.trades.recent

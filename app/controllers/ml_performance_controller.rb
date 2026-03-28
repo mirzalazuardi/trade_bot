@@ -1,5 +1,5 @@
 class MlPerformanceController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
 
   def index
     @ml_models = current_user.ml_models.order(created_at: :desc)

@@ -1,5 +1,5 @@
 class PortfolioController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
 
   def show
     @positions = current_user.positions.open_positions.group_by(&:exchange_name)

@@ -1,5 +1,5 @@
 class MlModelsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
   before_action :set_ml_model, only: [ :show, :edit, :update, :destroy, :activate, :retire ]
 
   def index

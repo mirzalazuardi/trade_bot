@@ -1,5 +1,5 @@
 class BotsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
   before_action :set_bot, only: [ :show, :edit, :update, :destroy, :pause, :resume, :stop, :toggle_ai ]
 
   def index

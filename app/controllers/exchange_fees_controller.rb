@@ -1,5 +1,5 @@
 class ExchangeFeesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :require_authentication
 
   def index
     @exchange_fees = ExchangeFee.all.order(:exchange_name)
