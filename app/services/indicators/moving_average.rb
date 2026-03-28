@@ -18,7 +18,7 @@ module Indicators
       closes = candles.map(&:close)
       return [] if closes.empty?
 
-      multiplier = 2 / (period + 1)
+      multiplier = 2.0 / (period + 1)
       ema_values = [ closes.first ]
 
       (1..closes.length - 1).each do |i|

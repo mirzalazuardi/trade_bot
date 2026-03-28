@@ -18,7 +18,7 @@ module OrderManagement
       return Result.failure([ "Invalid side" ]) unless valid_side?
       return Result.failure(validation_errors) unless validation_errors.empty?
 
-      estimated_fee = FeeCalculator.estimate_fee(
+      estimated_fee = FeeManagement::FeeCalculator.estimate_fee(
         exchange_name: @bot.exchange_name,
         order_type: @order_type,
         amount: @quantity * @price,
@@ -35,8 +35,7 @@ module OrderManagement
         order_type: @order_type,
         quantity: @quantity,
         price: @price,
-        estimated_fee: estimated_fee.amount,
-        estimated_fee_currency: estimated_fee.currency
+        estimated_fee: estimated_fee
       )
 
       begin

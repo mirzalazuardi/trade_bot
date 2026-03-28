@@ -7,7 +7,7 @@ module FeeManagement
       if exchange_fee.spread_based
         estimate_spread_fee(exchange_name: exchange_name, side: side, amount: amount)
       else
-        rate = order_type == :maker ? exchange_fee.maker_rate : exchange_fee.taker_rate
+        rate = order_type.to_s == "maker" ? exchange_fee.maker_rate : exchange_fee.taker_rate
         amount * rate
       end
     end

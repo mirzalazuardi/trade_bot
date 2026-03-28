@@ -19,7 +19,7 @@ module Features
 
     def fetch_candles
       limit = (@ml_model.feature_list.length * 3).clamp(50, 500)
-      MarketData::QueryService.call(exchange: @exchange, pair: @pair, interval: "1h", limit: limit)
+      MarketData::QueryService.candles(exchange: @exchange, pair: @pair, interval: "1h", limit: limit)
     end
 
     def insufficient_data?
@@ -50,7 +50,7 @@ module Features
       end
 
       if @ml_model.feature_list.include?("rsi")
-        rsi = Indicators::RSI.call(@candles, period: 14)
+        rsi = Indicators::RSI.calculate(@candles, period: 14)
         features.concat(rsi.last(5))
       end
 

@@ -18,7 +18,7 @@ module Trading
 
       return Result.failure([ "Invalid quantity" ]) unless quantity.positive?
 
-      estimated_fee = FeeCalculator.estimate_fee(
+      estimated_fee = FeeManagement::FeeCalculator.estimate_fee(
         exchange_name: @bot.exchange_name,
         order_type: "limit",
         amount: quantity * price,
@@ -39,7 +39,7 @@ module Trading
         quantity: quantity,
         price: price,
         ml_confidence: ml_confidence,
-        estimated_fee: estimated_fee.amount,
+        estimated_fee: estimated_fee,
         status: :pending,
         expires_at: 5.minutes.from_now
       )

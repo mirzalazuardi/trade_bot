@@ -6,7 +6,7 @@ module Trading
       bot = Bot.find(bot_id)
       return unless bot.active?
 
-      candles = MarketData::QueryService.call(
+      candles = MarketData::QueryService.candles(
         exchange: bot.exchange_name,
         pair: bot.pair,
         interval: timeframe,
@@ -22,7 +22,7 @@ module Trading
 
       ActiveSupport::Notifications.publish("signal.generated", bot_id: bot.id, signal: signal, timeframe: timeframe)
 
-      return signal.hold? ? nil : signal
+      return if signal.hold?
 
       if bot.ai_enabled && bot.ml_model_id
         filtered = apply_ml_filter(bot: bot, signal: signal)
@@ -30,11 +30,12 @@ module Trading
         signal = filtered
       end
 
-      case bot.mode_auto?
-      when true
-        execute_signal(bot: bot, signal: signal) unless signal.hold?
-      when false
-        request_approval(bot: bot, signal: signal) unless signal.hold?
+      return if signal.hold?
+
+      if bot.mode_auto?
+        execute_signal(bot: bot, signal: signal)
+      else
+        request_approval(bot: bot, signal: signal)
       end
 
       signal
@@ -44,10 +45,10 @@ module Trading
 
     def compute_indicators(candles, required)
       result = {}
-      result[:rsi] = Indicators::RSI.call(candles, period: 14) if required.include?(:rsi)
+      result[:rsi] = Indicators::RSI.calculate(candles, period: 14) if required.include?(:rsi)
 
       if required.include?(:macd)
-        result[:macd] = Indicators::MACD.call(
+        result[:macd] = Indicators::MACD.calculate(
           candles,
           fast_period: 12,
           slow_period: 26,
