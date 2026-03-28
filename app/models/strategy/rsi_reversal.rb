@@ -18,15 +18,16 @@ module Strategy
       return Signal.new(type: Signal::HOLD, confidence: 0, reason: "Insufficient RSI data") if rsi_values.nil? || rsi_values.empty?
 
       current_rsi = rsi_values.last
+      strategy_params = self.class.params
 
-      if current_rsi <= params[:oversold]
+      if current_rsi <= strategy_params[:oversold]
         Signal.new(
           type: Signal::BUY,
           confidence: calculate_confidence(current_rsi, :oversold),
           reason: "RSI oversold: #{current_rsi.round(2)}",
           suggested_price: candles.last.close
         )
-      elsif current_rsi >= params[:overbought]
+      elsif current_rsi >= strategy_params[:overbought]
         Signal.new(
           type: Signal::SELL,
           confidence: calculate_confidence(current_rsi, :overbought),
