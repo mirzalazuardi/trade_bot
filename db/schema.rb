@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_001007) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_001100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -116,6 +116,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001007) do
     t.index ["name", "version"], name: "index_ml_models_on_name_and_version", unique: true
     t.index ["status"], name: "index_ml_models_on_status"
     t.index ["training_date"], name: "index_ml_models_on_training_date"
+  end
+
+  create_table "ml_prediction_logs", force: :cascade do |t|
+    t.bigint "bot_id", null: false
+    t.decimal "confidence", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.jsonb "features_snapshot", default: {}
+    t.bigint "ml_model_id", null: false
+    t.string "signal_type"
+    t.boolean "trade_executed", default: false
+    t.boolean "trade_profitable", default: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["bot_id", "created_at"], name: "index_ml_prediction_logs_on_bot_id_and_created_at"
+    t.index ["bot_id"], name: "index_ml_prediction_logs_on_bot_id"
+    t.index ["ml_model_id", "created_at"], name: "index_ml_prediction_logs_on_ml_model_id_and_created_at"
+    t.index ["ml_model_id"], name: "index_ml_prediction_logs_on_ml_model_id"
+    t.index ["user_id"], name: "index_ml_prediction_logs_on_user_id"
   end
 
   create_table "monitored_pairs", force: :cascade do |t|
@@ -243,6 +261,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001007) do
   add_foreign_key "approvals", "users"
   add_foreign_key "bots", "users"
   add_foreign_key "exchange_credentials", "users"
+  add_foreign_key "ml_prediction_logs", "bots"
+  add_foreign_key "ml_prediction_logs", "ml_models"
+  add_foreign_key "ml_prediction_logs", "users"
   add_foreign_key "monitored_pairs", "users"
   add_foreign_key "orders", "bots"
   add_foreign_key "orders", "users"

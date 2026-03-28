@@ -31,6 +31,14 @@ module MlAnalytics
       raw_confidence = run_inference(model, features, ml_model.model_type)
       confidence = normalize_confidence(raw_confidence)
 
+      MlPredictionLog.log_prediction(
+        bot: @bot,
+        model: ml_model,
+        confidence: confidence,
+        signal_type: @signal.type,
+        features: features
+      )
+
       Prediction.new(
         confidence: confidence,
         prediction: map_to_signal(confidence),
