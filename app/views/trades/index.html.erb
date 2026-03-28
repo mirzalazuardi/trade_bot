@@ -1,0 +1,71 @@
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold">Trades</h1>
+
+  <%= form_with url: trades_path, method: :get, class: "bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 items-end" do |f| %>
+    <div>
+      <%= f.label :exchange, class: "block text-sm text-gray-600" %>
+      <%= f.text_field :exchange, class: "border rounded px-2 py-1" %>
+    </div>
+    <div>
+      <%= f.label :pair, class: "block text-sm text-gray-600" %>
+      <%= f.text_field :pair, class: "border rounded px-2 py-1" %>
+    </div>
+    <div>
+      <%= f.label :side, class: "block text-sm text-gray-600" %>
+      <%= f.select :side, [["All", ""], ["Buy", "buy"], ["Sell", "sell"]], {}, class: "border rounded px-2 py-1" %>
+    </div>
+    <div>
+      <%= f.label :from_date, class: "block text-sm text-gray-600" %>
+      <%= f.date_field :from_date, class: "border rounded px-2 py-1" %>
+    </div>
+    <div>
+      <%= f.label :to_date, class: "block text-sm text-gray-600" %>
+      <%= f.date_field :to_date, class: "border rounded px-2 py-1" %>
+    </div>
+    <div>
+      <%= f.submit "Filter", class: "bg-blue-600 text-white px-4 py-1 rounded" %>
+    </div>
+  <% end %>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <div class="flex justify-between mb-4">
+      <div>Total PnL: <span class="font-bold <%= @total_pnl >= 0 ? 'text-green-600' : 'text-red-600' %>"><%= number_to_currency(@total_pnl) %></span></div>
+      <div>Total Fees: <span class="font-bold"><%= number_to_currency(@total_fees) %></span></div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-3 py-2 text-left text-sm">Time</th>
+            <th class="px-3 py-2 text-left text-sm">Pair</th>
+            <th class="px-3 py-2 text-left text-sm">Side</th>
+            <th class="px-3 py-2 text-right text-sm">Qty</th>
+            <th class="px-3 py-2 text-right text-sm">Entry</th>
+            <th class="px-3 py-2 text-right text-sm">Exit</th>
+            <th class="px-3 py-2 text-right text-sm">Fees</th>
+            <th class="px-3 py-2 text-right text-sm">Net PnL</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <% @trades.each do |trade| %>
+            <tr>
+              <td class="px-3 py-2 text-sm"><%= trade.closed_at&.strftime("%Y-%m-%d %H:%M") %></td>
+              <td class="px-3 py-2 text-sm"><%= trade.pair %></td>
+              <td class="px-3 py-2 text-sm">
+                <span class="px-1 rounded text-xs <%= trade.side == 'buy' ? 'bg-green-100' : 'bg-red-100' %>"><%= trade.side %></span>
+              </td>
+              <td class="px-3 py-2 text-sm text-right"><%= trade.quantity %></td>
+              <td class="px-3 py-2 text-sm text-right"><%= trade.entry_price %></td>
+              <td class="px-3 py-2 text-sm text-right"><%= trade.exit_price %></td>
+              <td class="px-3 py-2 text-sm text-right"><%= number_to_currency(trade.total_fees) %></td>
+              <td class="px-3 py-2 text-sm text-right font-medium <%= trade.net_pnl >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= number_to_currency(trade.net_pnl) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
