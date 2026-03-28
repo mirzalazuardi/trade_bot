@@ -11,8 +11,6 @@ class TradesController < ApplicationController
       @trades = @trades.by_date_range(Date.parse(params[:from_date]), Date.parse(params[:to_date]))
     end
 
-    @trades = @trades.page(params[:page] || 1).per(20)
-
     @total_pnl = @trades.sum(:net_pnl)
     @total_fees = @trades.sum(:total_fees)
   end
