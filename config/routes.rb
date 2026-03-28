@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
   resources :trades, only: [ :index ]
-  resources :portfolio, only: [ :show ]
+  get "portfolio", to: "portfolio#show", as: :portfolio
   resources :exchange_fees do
     member do
       post :sync

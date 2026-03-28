@@ -135,11 +135,11 @@ Multiple services call `@bot.risk_config&.max_position_percent` etc., but `Bot` 
 
 ### Other Minor Items
 
-| Item | Description |
-|------|-------------|
-| `Signal` constant warning | `strategy/base.rb:33` redefines `Signal` on each load. Consider namespacing as `Strategy::Signal`. |
-| Skipped tests (3) | ML predict tests that require candle fixtures. Not blocking. |
-| `UpdateMlOutcomesJob.perform_async` | Should be `perform_later` (Rails convention). |
+| Item | Status | Description |
+|------|--------|--------------|
+| `Signal` constant warning | ✅ FIXED | Namespaced as `Strategy::Signal` in module |
+| Skipped tests (3) | — | ML predict tests that require candle fixtures. Not blocking. |
+| `UpdateMlOutcomesJob.perform_async` | — | Should be `perform_later` (Rails convention). |
 
 ## License
 
