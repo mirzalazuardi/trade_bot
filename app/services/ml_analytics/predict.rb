@@ -1,5 +1,6 @@
 module MlAnalytics
   class Predict
+    CACHE_MUTEX = Mutex.new
     @@model_cache = {}
 
     def self.model_cache
@@ -56,19 +57,21 @@ module MlAnalytics
     private
 
     def load_model(ml_model)
-      return @@model_cache[ml_model.id] if @@model_cache.key?(ml_model.id)
+      CACHE_MUTEX.synchronize do
+        return @@model_cache[ml_model.id] if @@model_cache.key?(ml_model.id)
 
-      path = ml_model.file_path
-      return nil unless path && File.exist?(path)
+        path = ml_model.file_path
+        return nil unless path && File.exist?(path)
 
-      model = case ml_model.model_type
-      when "lightgbm" then load_lightgbm(path)
-      when "onnx" then load_onnx(path)
-      else nil
+        model = case ml_model.model_type
+        when "lightgbm" then load_lightgbm(path)
+        when "onnx" then load_onnx(path)
+        else nil
+        end
+
+        @@model_cache[ml_model.id] = model if model
+        model
       end
-
-      @@model_cache[ml_model.id] = model if model
-      model
     rescue => e
       Rails.logger.warn "Failed to load model #{ml_model.id}: #{e.message}"
       nil

@@ -42,15 +42,15 @@ module MlAnalytics
     end
 
     def confidence_distribution
-      bins = { low: 0, moderate: 0, high: 0 }
-      base_scope.each do |log|
-        case log.confidence
-        when 0.0..0.3 then bins[:low] += 1
-        when 0.3..0.7 then bins[:moderate] += 1
-        else bins[:high] += 1
-        end
-      end
-      bins
+      counts = base_scope
+        .group(Arel.sql("CASE WHEN confidence <= 0.3 THEN 'low' WHEN confidence <= 0.7 THEN 'moderate' ELSE 'high' END"))
+        .count
+
+      {
+        low: counts["low"] || 0,
+        moderate: counts["moderate"] || 0,
+        high: counts["high"] || 0
+      }
     end
 
     def outcome_metrics
@@ -84,9 +84,5 @@ module MlAnalytics
       :profitable_trades,
       :losing_trades
     )
-
-    def empty_outcomes
-      { accuracy: 0.0, profitable_trades: 0, losing_trades: 0 }
-    end
   end
 end
