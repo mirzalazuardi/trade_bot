@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001007) do
     t.decimal "estimated_fee", precision: 20, scale: 8
     t.datetime "expires_at"
     t.decimal "ml_confidence", precision: 5, scale: 2
+    t.string "pair"
     t.decimal "price", precision: 20, scale: 8
     t.decimal "quantity", precision: 20, scale: 8
     t.string "side"
@@ -231,6 +232,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001007) do
     t.integer "failed_attempts", default: 0, null: false
     t.datetime "locked_until"
     t.string "password_digest", null: false
+    t.string "telegram_chat_id"
+    t.boolean "telegram_enabled", default: false
+    t.string "telegram_user_id"
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
