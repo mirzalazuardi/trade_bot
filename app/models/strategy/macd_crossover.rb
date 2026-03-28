@@ -1,5 +1,5 @@
 module Strategy
-  class MACDCrossover
+  class MacdCrossover
     include Base
 
     def self.required_indicators
@@ -7,11 +7,7 @@ module Strategy
     end
 
     def self.params
-      {
-        fast_period: 12,
-        slow_period: 26,
-        signal_period: 9
-      }
+      { fast_period: 12, slow_period: 26, signal_period: 9 }
     end
 
     def analyze(candles, indicators: {})

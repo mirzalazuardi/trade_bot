@@ -1,5 +1,5 @@
 module Strategy
-  class RSIReversal
+  class RsiReversal
     include Base
 
     OVERBOUGHT = 70
@@ -10,11 +10,7 @@ module Strategy
     end
 
     def self.params
-      {
-        period: 14,
-        overbought: OVERBOUGHT,
-        oversold: OVERSOLD
-      }
+      { period: 14, overbought: OVERBOUGHT, oversold: OVERSOLD }
     end
 
     def analyze(candles, indicators: {})
@@ -38,11 +34,7 @@ module Strategy
           suggested_price: candles.last.close
         )
       else
-        Signal.new(
-          type: Signal::HOLD,
-          confidence: 0.5,
-          reason: "RSI neutral: #{current_rsi.round(2)}"
-        )
+        Signal.new(type: Signal::HOLD, confidence: 0.5, reason: "RSI neutral: #{current_rsi.round(2)}")
       end
     end
 
