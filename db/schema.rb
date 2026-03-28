@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_001101) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_001102) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -187,6 +187,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001101) do
     t.string "pair"
     t.decimal "price", precision: 20, scale: 8
     t.decimal "quantity", precision: 20, scale: 8
+    t.string "side", default: "long", null: false
     t.enum "status", default: "open", enum_type: "position_status"
     t.decimal "total_fees", precision: 20, scale: 8, default: "0.0"
     t.datetime "updated_at", null: false

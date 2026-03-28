@@ -22,7 +22,9 @@ module OrderManagement
         exchange_name: @bot.exchange_name,
         order_type: @order_type,
         amount: @quantity * @price,
-        side: @side
+        side: @side,
+        pair: @bot.pair,
+        quantity: @quantity
       )
 
       order = Order.create!(

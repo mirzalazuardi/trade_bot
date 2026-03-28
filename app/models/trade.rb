@@ -25,8 +25,15 @@ class Trade < ApplicationRecord
   end
 
   def roi
-    return 0 if entry_price.zero?
-    ((exit_price - entry_price) / entry_price * 100).round(2)
+    return 0 if entry_price.zero? || exit_price.nil?
+
+    pnl_per_unit = if side == "sell"
+      entry_price - exit_price
+    else
+      exit_price - entry_price
+    end
+
+    (pnl_per_unit / entry_price * 100).round(2)
   end
 
   private

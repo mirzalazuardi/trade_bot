@@ -22,7 +22,9 @@ module Trading
         exchange_name: @bot.exchange_name,
         order_type: "limit",
         amount: quantity * price,
-        side: side
+        side: side,
+        pair: @bot.pair,
+        quantity: quantity
       )
 
       ml_confidence = nil
