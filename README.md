@@ -143,9 +143,9 @@ The `Trading::BacktestService` exists but has no UI. Need to add:
 
 ### P7: Paper Trading Close Logic (priority: medium, effort: few hours)
 
-Currently `PaperTrading` creates trades with `net_pnl: 0`. For paper trading to be useful, need to:
-- Add a scheduled job that closes paper positions when signal flips
-- Or add a "close all paper positions" button in UI
+| Status | Description |
+|--------|--------------|
+| ✅ FIXED | PaperTrading now creates/updates/closes positions on signal flip with real PnL calculation |
 
 ### Other Minor Items
 
