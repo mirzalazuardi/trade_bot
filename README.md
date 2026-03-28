@@ -12,35 +12,42 @@ Self-hosted multi-exchange trading bot built on Rails 8.1. Supports crypto (Bina
 
 ## Features
 
-- **4 exchange adapters** with unified interface (Binance, Indodax, Tokocrypto, OANDA)
-- **Strategy framework** with pluggable strategies (RSI Reversal, MACD Crossover)
-- **Technical indicators** (RSI, MACD, Bollinger Bands, SMA/EMA)
-- **ML signal filtering** (LightGBM/ONNX) with fractional differentiation, meta-labeling
-- **Risk management** with pre-trade checks
-- **Fee-aware calculations** per exchange (percentage-based for crypto, pip-based for forex)
-- **Telegram integration** (commands, approval workflow, daily summary)
-- **Web dashboard** with portfolio, bots, trades, ML performance tracking
-- **Trading modes**: auto, semi-auto, paper trading, backtesting
-- **Backtesting** with historical candle replay and performance metrics
+### Exchange Support
+- **Crypto**: Binance, Indodax, Tokocrypto — unified adapter interface
+- **Forex/Commodities**: OANDA — forex pairs, XAU/USD, XAG/USD
 
-## Setup
+### Trading
+- **4 Trading Modes**: Auto, Semi-Auto, Paper Trading, Backtest
+- **Strategy Framework**: Pluggable strategies (RSI Reversal, MACD Crossover)
+- **Technical Indicators**: RSI, MACD, Bollinger Bands, SMA/EMA
+- **Fee-Aware**: Percentage-based (crypto) + pip-based (forex)
 
+### AI/ML
+- **ML Signal Filtering**: LightGBM/ONNX models
+- **Feature Engineering**: Fractional differentiation, rolling stats, microstructure
+- **Meta-Labeling**: Predict trade size, not direction (reduces overfitting)
+
+### Risk & Compliance
+- **Pre-Trade Checks**: Position size, daily loss limit, max open orders
+- **Telegram Integration**: Commands, approval workflow, daily summary
+
+### Dashboard
+- **Real-time Prices**: Crypto, Forex, Commodities (BTC, ETH, XAU/USD, etc.)
+- **Portfolio View**: Open positions, PnL by exchange
+- **Bot Management**: Create, pause, resume, toggle AI
+- **Trade History**: Filter by exchange, pair, date
+- **ML Performance**: Model accuracy, prediction logs
+
+## User Journey
+
+### 1. Setup
 ```bash
-git clone <repo>
-cd trade_bot
-bundle install
 bin/rails db:create db:migrate db:seed
 bin/dev
 ```
 
-## Configuration
-
-```bash
-bin/rails credentials:edit
-```
-
-Required credentials:
-
+### 2. Configure Exchanges
+Add API credentials via `bin/rails credentials:edit`:
 ```yaml
 binance:
   api_key: ...
@@ -51,6 +58,26 @@ oanda:
 telegram:
   bot_token: ...
 ```
+
+### 3. Create Bot
+1. Go to Dashboard → Bots → New Bot
+2. Select exchange + trading pair (e.g., BTC/USDT)
+3. Choose strategy (RSI Reversal, MACD Crossover)
+4. Select mode:
+   - **Auto**: Executes signals immediately
+   - **Semi-Auto**: Asks via Telegram before each trade
+   - **Paper Trading**: Simulates trades (no real money)
+   - **Backtest**: Run strategy on historical data
+5. Optionally enable AI filtering with ML model
+
+### 4. Monitor
+- Dashboard shows live prices + PnL
+- Telegram receives trade notifications
+- Portfolio view tracks open positions
+
+### 5. Backtesting (Optional)
+- Use `Trading::BacktestService` to run strategy on historical candles
+- View metrics: win rate, profit factor, max drawdown
 
 ## Architecture
 
@@ -86,6 +113,7 @@ BotScheduler (recurring)
     → ML filter (if AI enabled)
     → Auto: ExecuteSignal → PreTradeCheck → PlaceOrder
     → Semi-auto: RequestApproval → Telegram → User approves → ExecuteSignal
+    → Paper: Trading::PaperTrading → Position tracking with PnL
 ```
 
 ## Deployment
@@ -116,35 +144,18 @@ bin/rails test
 
 ## Known Issues — Remaining Fixes
 
-### P5: Risk Management (priority: high, effort: 1-2 days)
+### P5: Risk Management (priority: high)
 
-**H1: Risk check stubs are empty**
-`RiskManagement::PreTradeCheck` has three placeholder methods:
-- `check_position_size` — enforce max position as % of portfolio
-- `check_daily_loss_limit` — halt trading when daily drawdown exceeds 2%
-- `check_max_open_orders` — cap concurrent open orders per bot/exchange
+- **H1**: Empty stub methods in `PreTradeCheck`
+- **H2**: Balance check ignores fees
+- **H3**: `bot.risk_config` has no backing model
 
-**H2: Balance check ignores fees**
-`check_balance` compares `available_balance >= quantity * price` but doesn't add estimated fees.
-
-**H3: `bot.risk_config` has no backing model**
-Services call `@bot.risk_config&.max_position_percent` but Bot has no `risk_config` association.
-
-### P6: Backtesting UI (priority: medium, effort: 1 day)
+### P6: Backtesting UI (priority: medium)
 
 `Trading::BacktestService` exists but needs UI:
 - `BacktestsController` with `create` action
 - Form on bots#show to select date range
-- Results view with metrics (win rate, profit factor, max drawdown)
-
-### Other Minor Items
-
-| Item | Status | Description |
-|------|--------|--------------|
-| `Signal` constant warning | ✅ FIXED | Namespaced as `Strategy::Signal` |
-| P7 Paper Trading | ✅ FIXED | Position tracking with real PnL |
-| `perform_async` → `perform_later` | ✅ FIXED | Rails convention |
-| Skipped ML tests (3) | — | Require candle fixtures |
+- Results view with metrics
 
 ## License
 
