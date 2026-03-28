@@ -87,31 +87,27 @@ module MlAnalytics
     end
 
     def run_inference(model, features, model_type)
+      row = [ features ]
+
       case model_type
       when "lightgbm"
-        predict_proba = model.predict(features)
-        predict_proba.is_a?(Array) ? predict_proba[0] : predict_proba
+        predictions = model.predict(row)
+        predictions.is_a?(Array) ? predictions.flatten.first : predictions
       when "onnx"
-        input = { "input" => features.reshape(1, -1) }
-        output = model.run(input)
-        output["output"]&.first || 0.5
+        output = model.run({ "input" => row })
+        output.values.flatten.first || 0.5
       else
         0.5
       end
     end
 
     def normalize_confidence(raw)
-      raw.clamp(0.0, 1.0)
+      raw.to_f.clamp(0.0, 1.0)
     end
 
     def map_to_signal(confidence)
-      if confidence >= @bot.ml_high_threshold
-        @signal.type
-      elsif confidence >= @bot.ml_low_threshold
-        @signal.type
-      else
-        "hold"
-      end
+      return "hold" if confidence < @bot.ml_low_threshold
+      @signal.type
     end
 
     Prediction = Data.define(:confidence, :prediction, :reason) do

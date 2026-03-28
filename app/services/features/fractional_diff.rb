@@ -12,18 +12,20 @@ module Features
 
     def compute
       weights = compute_weights
-      return @closes if weights.empty?
+      return @closes if weights.length < 2
 
-      convolve(@closes, weights)
+      ffd(@closes, weights)
     end
 
     private
 
+    # AFML Ch.5 — Fixed-width window fractional differentiation
+    # w_0 = 1, w_k = -w_{k-1} * (d - k + 1) / k
     def compute_weights
-      weights = []
-      k = 0
-      while true
-        w = gamma_function(k - @d + 1) / (Math::PI * gamma_function(k + 1))
+      weights = [ 1.0 ]
+      k = 1
+      loop do
+        w = -weights.last * (@d - k + 1) / k
         break if w.abs < @threshold
         weights << w
         k += 1
@@ -31,26 +33,18 @@ module Features
       weights
     end
 
-    def gamma_function(n)
-      return Math.sqrt(Math::PI) if n == 0.5
-      return 1 if n == 1
-      return Math::PI / Math.sin(Math::PI * n) if n < 0
-
-      result = 1
-      (1...n.to_i).each { |i| result *= i }
-      result
-    end
-
-    def convolve(signal, kernel)
+    def ffd(series, weights)
       output = []
-      signal.each_with_index do |_, i|
-        sum = 0
-        kernel.each_with_index do |w, j|
+
+      series.each_with_index do |_, i|
+        val = 0.0
+        weights.each_with_index do |w, j|
           break if i - j < 0
-          sum += signal[i - j] * w
+          val += w * series[i - j]
         end
-        output << sum
+        output << val
       end
+
       output
     end
   end
