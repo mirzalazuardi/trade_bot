@@ -227,13 +227,13 @@
 
 ## 22. Deployment & Operations
 
-- [ ] 22.1 Configure Kamal 2 (`config/deploy.yml`) — Docker image build, VPS target, environment variables, health check path
-- [ ] 22.2 Create Dockerfile optimized for budget VPS (multi-stage build, minimal image size, Puma + Solid Queue in single container)
-- [ ] 22.3 Configure Kamal 2 SSL via Let's Encrypt (built-in proxy with automatic HTTPS)
-- [ ] 22.4 Configure PostgreSQL on VPS (tuned for 2GB: shared_buffers=256MB; or 1GB: shared_buffers=128MB)
-- [ ] 22.5 Configure PostgreSQL backup cron (daily pg_dump to local + optional object storage)
-- [ ] 22.6 Create health check endpoint (/up) that verifies DB, Solid Queue, exchange connectivity, and ML model status — Kamal uses this for rolling deploys
-- [ ] 22.7 Add swap file setup to VPS provisioning (2GB swap recommended for 1GB VPS, 1GB swap for 2GB VPS)
-- [ ] 22.8 Verify lightgbm/onnxruntime gem installation in Docker image (Ubuntu/Debian x86_64 base)
-- [ ] 22.9 Create ML model deployment workflow (upload via dashboard or `kamal app exec` to copy model file)
-- [ ] 22.10 Test full deploy cycle: `kamal setup` (first deploy) and `kamal deploy` (subsequent) — verify zero-downtime rolling deploy
+- [x] 22.1 Configure Kamal 2 (`config/deploy.yml`) — Docker image build, VPS target, environment variables, health check path
+- [x] 22.2 Create Dockerfile optimized for budget VPS (multi-stage build, minimal image size, Puma + Solid Queue in single container)
+- [x] 22.3 Configure SSL via Let's Encrypt (built-in proxy with automatic HTTPS)
+- [x] 22.4 Configure PostgreSQL on VPS (tuned for 2GB: shared_buffers=256MB; or 1GB: shared_buffers=128MB)
+- [x] 22.5 Configure PostgreSQL backup cron (daily pg_dump to local + optional object storage)
+- [x] 22.6 Create health check endpoint (/up) that verifies DB, Solid Queue, exchange connectivity, and ML model status — Kamal uses this for rolling deploys
+- [x] 22.7 Add swap file setup to VPS provisioning (2GB swap recommended for 1GB VPS, 1GB swap for 2GB VPS)
+- [x] 22.8 Verify lightgbm/onnxruntime gem installation in Docker image (Ubuntu/Debian x86_64 base)
+- [x] 22.9 Create ML model deployment workflow (upload via dashboard or `kamal app exec` to copy model file)
+- [x] 22.10 Test full deploy cycle: `kamal setup` (first deploy) and `kamal deploy` (subsequent) — verify zero-downtime rolling deploy

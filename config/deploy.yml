@@ -16,10 +16,11 @@ servers:
 
 # Enable SSL auto certification via Let's Encrypt.
 # Uncomment and set your domain when ready to deploy.
-# proxy:
-#   ssl: true
-#   host: trade.yourdomain.com
-#   app_port: 3000
+# Proxy handles SSL termination automatically.
+proxy:
+  ssl: true
+  host: trade.yourdomain.com
+  app_port: 3000
 
 # Where you keep your container images.
 registry:
