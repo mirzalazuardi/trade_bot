@@ -1,0 +1,41 @@
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold">Edit Bot</h1>
+
+  <%= form_with model: @bot, class: "bg-white p-6 rounded-lg shadow space-y-4" do |f| %>
+    <div>
+      <%= f.label :exchange_name, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :exchange_name, @exchanges.map { |e| [e.titleize, e] }, {}, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :pair, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :pair, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :strategy, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :strategy, @strategies.map { |s| [s.titleize, s] }, {}, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div>
+      <%= f.label :mode, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :mode, [["Auto", "auto"], ["Semi-Auto", "semi_auto"]], {}, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.check_box :ai_enabled, class: "rounded border-gray-300" %>
+      <%= f.label :ai_enabled, class: "ml-2 text-sm text-gray-700" %>
+    </div>
+
+    <% if @ml_models&.any? %>
+      <div>
+        <%= f.label :ml_model_id, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :ml_model_id, @ml_models.map { |m| ["#{m.name} v#{m.version}", m.id] }, { include_blank: "None" }, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.submit "Update Bot", class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+    </div>
+  <% end %>
+</div>

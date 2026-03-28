@@ -1,0 +1,48 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Bots</h1>
+    <%= link_to "New Bot", new_bot_path, class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Exchange</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Pair</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Strategy</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Mode</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">AI</th>
+          <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+          <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @bots.each do |bot| %>
+          <tr>
+            <td class="px-4 py-3"><%= bot.exchange_name %></td>
+            <td class="px-4 py-3"><%= bot.pair %></td>
+            <td class="px-4 py-3"><%= bot.strategy %></td>
+            <td class="px-4 py-3"><%= bot.mode %></td>
+            <td class="px-4 py-3">
+              <% if bot.ai_enabled %>
+                <span class="text-green-600">🤖 On</span>
+              <% else %>
+                <span class="text-gray-400">Off</span>
+              <% end %>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 rounded text-sm <%= bot.active? ? 'bg-green-100 text-green-800' : bot.paused? ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800' %>">
+                <%= bot.status %>
+              </span>
+            </td>
+            <td class="px-4 py-3 text-right space-x-2">
+              <%= link_to "View", bot_path(bot), class: "text-blue-600 hover:underline" %>
+              <%= link_to "Edit", edit_bot_path(bot), class: "text-gray-600 hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

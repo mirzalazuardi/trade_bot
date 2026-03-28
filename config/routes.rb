@@ -6,6 +6,21 @@ Rails.application.routes.draw do
       post :test_connection
     end
   end
+  resources :bots do
+    member do
+      post :pause
+      post :resume
+      post :stop
+      post :toggle_ai
+    end
+  end
+  resources :trades, only: [ :index ]
+  resources :portfolio, only: [ :show ]
+  resources :exchange_fees do
+    member do
+      post :sync
+    end
+  end
   post "telegram/webhook" => "telegram#webhook"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
