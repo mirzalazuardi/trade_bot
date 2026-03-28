@@ -1,5 +1,6 @@
 class Position < ApplicationRecord
   belongs_to :user
+  belongs_to :bot, optional: true
   has_many :trades
 
   enum :status, {
