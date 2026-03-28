@@ -1,0 +1,75 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold mb-6">New Exchange Credential</h1>
+
+  <%= form_with(model: @credential, class: "space-y-6") do |f| %>
+    <div>
+      <%= f.label :exchange_name, "Exchange", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :exchange_name,
+        options_for_select(@exchanges, selected: f.object.exchange_name),
+        { prompt: "Select exchange" },
+        class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      <% if f.object.errors[:exchange_name].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= f.object.errors[:exchange_name].join(", ") %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :api_key, "API Key", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :api_key, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      <% if f.object.errors[:api_key].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= f.object.errors[:api_key].join(", ") %></p>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :api_secret, "API Secret", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.password_field :api_secret, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      <% if f.object.errors[:api_secret].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= f.object.errors[:api_secret].join(", ") %></p>
+      <% end %>
+    </div>
+
+    <div id="oanda-fields" class="hidden">
+      <div>
+        <%= f.label :account_id, "Account ID", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :account_id, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      </div>
+
+      <div class="mt-4">
+        <%= f.label :environment, "Environment", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :environment,
+          options_for_select([["Practice (Demo)", "practice"], ["Live", "live"]], selected: f.object.environment || "practice"),
+          {},
+          class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+      </div>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.check_box :is_active, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+      <%= f.label :is_active, "Active", class: "ml-2 block text-sm text-gray-700" %>
+    </div>
+
+    <div class="flex gap-4">
+      <%= f.submit "Save", class: "bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" %>
+      <%= link_to "Cancel", exchange_credentials_path, class: "bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const exchangeSelect = document.querySelector("#exchange_credential_exchange_name");
+    const oandaFields = document.getElementById("oanda-fields");
+
+    function toggleFields() {
+      if (exchangeSelect.value === "oanda") {
+        oandaFields.classList.remove("hidden");
+      } else {
+        oandaFields.classList.add("hidden");
+      }
+    }
+
+    exchangeSelect.addEventListener("change", toggleFields);
+    toggleFields();
+  });
+</script>

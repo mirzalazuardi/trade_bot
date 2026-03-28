@@ -1,0 +1,80 @@
+# Name of your application. Used to uniquely configure containers.
+service: trade_bot
+
+# Name of the container image.
+image: trade_bot
+
+# Deploy to these servers (update with your VPS IP).
+servers:
+  web:
+    - 192.168.0.1
+  # Uncomment below to run Solid Queue on a separate server:
+  # job:
+  #   hosts:
+  #     - 192.168.0.1
+  #   cmd: bin/jobs
+
+# Enable SSL auto certification via Let's Encrypt.
+# Uncomment and set your domain when ready to deploy.
+# proxy:
+#   ssl: true
+#   host: trade.yourdomain.com
+#   app_port: 3000
+
+# Where you keep your container images.
+registry:
+  server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Inject ENV variables into containers (secrets come from .kamal/secrets).
+env:
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+  clear:
+    # Run Solid Queue inside Puma process (budget VPS single-container mode)
+    SOLID_QUEUE_IN_PUMA: true
+
+    # Budget VPS: 2 workers for 2GB, 1 worker for 1GB
+    WEB_CONCURRENCY: 2
+
+    # Rails log level
+    RAILS_LOG_LEVEL: info
+
+# Aliases for common commands
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
+
+# Persistent storage for Active Storage and ML models
+volumes:
+  - "trade_bot_storage:/rails/storage"
+
+# Bridge fingerprinted assets between deploys
+asset_path: /rails/public/assets
+
+# Configure the image builder
+builder:
+  arch: amd64
+  # Uncomment for faster builds on Apple Silicon:
+  # remote: ssh://docker@docker-builder-server
+
+# PostgreSQL as accessory (or use external managed DB)
+# Uncomment if you want Kamal to manage PostgreSQL on the VPS:
+# accessories:
+#   db:
+#     image: postgres:16
+#     host: 192.168.0.1
+#     port: "127.0.0.1:5432:5432"
+#     env:
+#       clear:
+#         POSTGRES_DB: trade_bot_production
+#       secret:
+#         - POSTGRES_PASSWORD
+#     directories:
+#       - data:/var/lib/postgresql/data
