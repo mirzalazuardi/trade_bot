@@ -18,7 +18,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
       mode: "auto",
       status: "active"
     )
-    signal = Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
+    signal = Strategy::Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
 
     result = MlAnalytics::Predict.call(bot: bot, signal: signal)
 
@@ -50,7 +50,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
       ml_high_threshold: 0.7,
       ml_low_threshold: 0.3
     )
-    signal = Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
+    signal = Strategy::Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
 
     result = MlAnalytics::Predict.call(bot: bot, signal: signal)
 
@@ -87,7 +87,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
       ml_low_threshold: 0.3
     )
 
-    signal = Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
+    signal = Strategy::Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
 
     result = MlAnalytics::Predict.call(bot: bot, signal: signal)
 
@@ -122,7 +122,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
       ml_high_threshold: 0.7,
       ml_low_threshold: 0.3
     )
-    signal = Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
+    signal = Strategy::Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
 
     result = MlAnalytics::Predict.call(bot: bot, signal: signal)
 
@@ -157,7 +157,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
       ml_high_threshold: 0.7,
       ml_low_threshold: 0.3
     )
-    signal = Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
+    signal = Strategy::Signal.new(type: "buy", confidence: 0.8, reason: "RSI oversold")
 
     result = MlAnalytics::Predict.call(bot: bot, signal: signal)
 
@@ -170,7 +170,7 @@ class MlAnalyticsPredictTest < ActiveSupport::TestCase
   test "clamps confidence between 0 and 1" do
     predict = MlAnalytics::Predict.new(
       bot: OpenStruct.new(ml_model_id: nil, exchange_name: "binance", pair: "BTC/USDT"),
-      signal: Signal.new(type: "buy", confidence: 0.5, reason: "test")
+      signal: Strategy::Signal.new(type: "buy", confidence: 0.5, reason: "test")
     )
 
     assert_equal 0.5, predict.send(:normalize_confidence, 0.5)

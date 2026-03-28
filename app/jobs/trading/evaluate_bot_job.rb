@@ -66,7 +66,7 @@ module Trading
 
       return signal if prediction.confidence >= bot.ml_high_threshold && signal.buy?
       return signal if prediction.confidence >= bot.ml_high_threshold && signal.sell?
-      return Signal.new(type: Signal::HOLD, confidence: 0, reason: "ML filtered: low confidence #{prediction.confidence}") if prediction.confidence < bot.ml_low_threshold
+        return Strategy::Signal.new(type: Strategy::Signal::HOLD, confidence: 0, reason: "ML filtered: low confidence #{prediction.confidence}") if prediction.confidence < bot.ml_low_threshold
 
       signal
     end

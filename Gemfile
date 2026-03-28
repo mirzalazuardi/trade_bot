@@ -18,6 +18,7 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 
 gem "bcrypt", "~> 3.1.7"
+gem "csv"
 
 gem "faraday"
 gem "faraday-retry"

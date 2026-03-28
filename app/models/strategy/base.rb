@@ -28,34 +28,34 @@ module Strategy
       end
     end
   end
-end
 
-Signal = Data.define(:type, :confidence, :reason, :suggested_price) do
-  BUY = "buy"
-  SELL = "sell"
-  HOLD = "hold"
+  Signal = Data.define(:type, :confidence, :reason, :suggested_price) do
+    BUY = "buy"
+    SELL = "sell"
+    HOLD = "hold"
 
-  def initialize(type:, confidence: 0.5, reason: nil, suggested_price: nil)
-    super
-  end
+    def initialize(type:, confidence: 0.5, reason: nil, suggested_price: nil)
+      super
+    end
 
-  def buy?
-    type == BUY
-  end
+    def buy?
+      type == BUY
+    end
 
-  def sell?
-    type == SELL
-  end
+    def sell?
+      type == SELL
+    end
 
-  def hold?
-    type == HOLD
-  end
+    def hold?
+      type == HOLD
+    end
 
-  def strong?
-    confidence >= 0.7
-  end
+    def strong?
+      confidence >= 0.7
+    end
 
-  def weak?
-    confidence < 0.4
+    def weak?
+      confidence < 0.4
+    end
   end
 end
