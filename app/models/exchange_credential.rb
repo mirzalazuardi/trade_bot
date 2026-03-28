@@ -1,6 +1,8 @@
 class ExchangeCredential < ApplicationRecord
   belongs_to :user
 
+  scope :active, -> { where(is_active: true) }
+
   validates :exchange_name, presence: true
   validates :exchange_name, inclusion: { in: Exchanges::Registry.available }
   validates :api_key, presence: true, if: :requires_credentials?
