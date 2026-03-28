@@ -134,6 +134,19 @@ Multiple services call `@bot.risk_config&.max_position_percent` etc., but `Bot` 
 - Add a `risk_configs` table + `has_one :risk_config` on Bot, or
 - Add risk columns directly to the `bots` table (`max_position_pct`, `max_daily_loss_pct`, `max_open_orders`)
 
+### P6: Backtesting UI (priority: medium, effort: 1 day)
+
+The `Trading::BacktestService` exists but has no UI. Need to add:
+- `BacktestsController` with `create` action to run backtests
+- Form on bots#show to select date range and run backtest
+- Results view showing metrics (win rate, profit factor, max drawdown, equity curve)
+
+### P7: Paper Trading Close Logic (priority: medium, effort: few hours)
+
+Currently `PaperTrading` creates trades with `net_pnl: 0`. For paper trading to be useful, need to:
+- Add a scheduled job that closes paper positions when signal flips
+- Or add a "close all paper positions" button in UI
+
 ### Other Minor Items
 
 | Item | Status | Description |
