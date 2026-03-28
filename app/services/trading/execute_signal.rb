@@ -22,6 +22,16 @@ module Trading
 
       return Result.failure(pre_check.errors) unless pre_check.success
 
+      if @bot.mode_paper_trade?
+        execute_paper_trade(side: side, quantity: quantity, price: price)
+      else
+        execute_live_trade(side: side, quantity: quantity, price: price)
+      end
+    end
+
+    private
+
+    def execute_live_trade(side:, quantity:, price:)
       result = OrderManagement::PlaceOrder.call(
         bot: @bot,
         side: side,
@@ -37,7 +47,19 @@ module Trading
       result
     end
 
-    private
+    def execute_paper_trade(side:, quantity:, price:)
+      # Simulate order fill at suggested price
+      paper_trade = Trading::PaperTrading.simulate(
+        bot: @bot,
+        side: side,
+        quantity: quantity,
+        price: price
+      )
+
+      ActiveSupport::Notifications.publish("order.placed", order_id: paper_trade.id, bot_id: @bot.id, signal: @signal)
+
+      Result.success(order: paper_trade)
+    end
 
     def current_price
       Ticker.find_by(exchange_name: @bot.exchange_name, pair: @bot.pair)&.last_price || 0

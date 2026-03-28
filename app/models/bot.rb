@@ -3,7 +3,7 @@ class Bot < ApplicationRecord
   has_many :orders
   has_many :trades
 
-  enum :mode, { auto: "auto", semi_auto: "semi_auto" }, prefix: true
+  enum :mode, { auto: "auto", semi_auto: "semi_auto", paper_trade: "paper_trade", backtest: "backtest" }, prefix: true
   enum :status, { active: "active", paused: "paused", stopped: "stopped" }, prefix: true
 
   validates :exchange_name, :pair, :strategy, presence: true
