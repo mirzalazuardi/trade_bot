@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_001102) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_001103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001102) do
   create_enum "ml_model_status", ["testing", "active", "retired"]
   create_enum "order_status", ["pending", "submitted", "open", "partially_filled", "filled", "cancelled", "failed"]
   create_enum "position_status", ["open", "closed"]
+  create_enum "trade_mode", ["live", "paper"]
 
   create_table "approvals", force: :cascade do |t|
     t.bigint "bot_id", null: false
@@ -234,6 +235,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001102) do
     t.decimal "gross_pnl", precision: 20, scale: 8
     t.decimal "ml_confidence", precision: 5, scale: 2
     t.integer "ml_model_id"
+    t.enum "mode", default: "live", enum_type: "trade_mode"
     t.decimal "net_pnl", precision: 20, scale: 8
     t.bigint "order_id", null: false
     t.string "pair"
