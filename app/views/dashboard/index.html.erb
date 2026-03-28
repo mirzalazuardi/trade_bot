@@ -33,6 +33,59 @@
     </div>
   </div>
 
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-lg font-semibold mb-3">Crypto</h2>
+      <div class="space-y-2">
+        <% @market_prices[:crypto].each do |price| %>
+          <div class="flex justify-between items-center border-b pb-1">
+            <span class="font-medium"><%= price[:pair] %></span>
+            <div class="text-right">
+              <div class="font-semibold"><%= price[:price] ? number_to_currency(price[:price], precision: 2) : "—" %></div>
+              <div class="text-xs <%= price[:change].to_f >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= price[:change] ? "#{price[:change] >= 0 ? '+' : ''}#{price[:change]}%" : "—" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-lg font-semibold mb-3">Forex</h2>
+      <div class="space-y-2">
+        <% @market_prices[:forex].each do |price| %>
+          <div class="flex justify-between items-center border-b pb-1">
+            <span class="font-medium"><%= price[:pair] %></span>
+            <div class="text-right">
+              <div class="font-semibold"><%= price[:price] ? number_to_currency(price[:price], precision: 5) : "—" %></div>
+              <div class="text-xs <%= price[:change].to_f >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= price[:change] ? "#{price[:change] >= 0 ? '+' : ''}#{price[:change]}%" : "—" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-lg font-semibold mb-3">Commodities</h2>
+      <div class="space-y-2">
+        <% @market_prices[:commodities].each do |price| %>
+          <div class="flex justify-between items-center border-b pb-1">
+            <span class="font-medium"><%= price[:pair] %></span>
+            <div class="text-right">
+              <div class="font-semibold"><%= price[:price] ? number_to_currency(price[:price], precision: 2) : "—" %></div>
+              <div class="text-xs <%= price[:change].to_f >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                <%= price[:change] ? "#{price[:change] >= 0 ? '+' : ''}#{price[:change]}%" : "—" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
   <div class="bg-white p-4 rounded-lg shadow">
     <h2 class="text-lg font-semibold mb-4">Balances</h2>
     <div class="space-y-2">

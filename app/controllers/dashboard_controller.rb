@@ -10,6 +10,7 @@ class DashboardController < ApplicationController
     @today_trades = current_user.trades.where("closed_at > ?", Time.current.beginning_of_day).count
 
     @balances = fetch_balances
+    @market_prices = fetch_market_prices
   end
 
   private
@@ -25,5 +26,78 @@ class DashboardController < ApplicationController
         { exchange: cred.exchange_name, balance: "Error", currency: "" }
       end
     end
+  end
+
+  MAJOR_MARKETS = {
+    crypto: [
+      { pair: "BTC/USDT", exchange: "binance" },
+      { pair: "ETH/USDT", exchange: "binance" },
+      { pair: "SOL/USDT", exchange: "binance" },
+      { pair: "BNB/USDT", exchange: "binance" },
+      { pair: "XRP/USDT", exchange: "binance" },
+      { pair: "ADA/USDT", exchange: "binance" },
+      { pair: "DOGE/USDT", exchange: "binance" },
+      { pair: "DOT/USDT", exchange: "binance" }
+    ],
+    forex: [
+      { pair: "EUR/USD", exchange: "oanda" },
+      { pair: "GBP/USD", exchange: "oanda" },
+      { pair: "USD/JPY", exchange: "oanda" },
+      { pair: "USD/CHF", exchange: "oanda" },
+      { pair: "AUD/USD", exchange: "oanda" },
+      { pair: "USD/CAD", exchange: "oanda" }
+    ],
+    commodities: [
+      { pair: "XAU/USD", exchange: "oanda" },
+      { pair: "XAG/USD", exchange: "oanda" }
+    ]
+  }
+
+  def fetch_market_prices
+    prices = { crypto: [], forex: [], commodities: [] }
+
+    MAJOR_MARKETS[:crypto].each do |market|
+      begin
+        adapter = Exchanges::Registry.get("binance").new(nil)
+        ticker = adapter.fetch_ticker(market[:pair])
+        prices[:crypto] << {
+          pair: market[:pair],
+          price: ticker.last,
+          change: ticker.price_change_percent_24h
+        }
+      rescue
+        prices[:crypto] << { pair: market[:pair], price: nil, change: nil }
+      end
+    end
+
+    MAJOR_MARKETS[:forex].each do |market|
+      begin
+        adapter = Exchanges::Registry.get("oanda").new(nil)
+        ticker = adapter.fetch_ticker(market[:pair])
+        prices[:forex] << {
+          pair: market[:pair],
+          price: ticker.last,
+          change: ticker.price_change_percent_24h
+        }
+      rescue
+        prices[:forex] << { pair: market[:pair], price: nil, change: nil }
+      end
+    end
+
+    MAJOR_MARKETS[:commodities].each do |market|
+      begin
+        adapter = Exchanges::Registry.get("oanda").new(nil)
+        ticker = adapter.fetch_ticker(market[:pair])
+        prices[:commodities] << {
+          pair: market[:pair],
+          price: ticker.last,
+          change: ticker.price_change_percent_24h
+        }
+      rescue
+        prices[:commodities] << { pair: market[:pair], price: nil, change: nil }
+      end
+    end
+
+    prices
   end
 end
