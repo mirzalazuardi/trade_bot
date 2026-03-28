@@ -143,7 +143,7 @@ Services call `@bot.risk_config&.max_position_percent` but Bot has no `risk_conf
 |------|--------|--------------|
 | `Signal` constant warning | ✅ FIXED | Namespaced as `Strategy::Signal` |
 | P7 Paper Trading | ✅ FIXED | Position tracking with real PnL |
-| `perform_async` → `perform_later` | — | Rails convention |
+| `perform_async` → `perform_later` | ✅ FIXED | Rails convention |
 | Skipped ML tests (3) | — | Require candle fixtures |
 
 ## License

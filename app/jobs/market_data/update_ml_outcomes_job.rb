@@ -17,7 +17,7 @@ module MarketData
     end
 
     def self.update_for_trade(trade)
-      perform_async(bot_id: trade.bot_id, trade_id: trade.id)
+      perform_later(bot_id: trade.bot_id, trade_id: trade.id)
     end
   end
 end
