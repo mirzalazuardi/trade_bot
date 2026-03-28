@@ -15,18 +15,24 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full">
+  <body class="h-full" data-controller="dashboard">
     <% if defined?(authenticated?) && authenticated? %>
-      <nav class="bg-gray-900">
+      <nav class="bg-gray-900" data-controller="toggle" data-toggle-target="nav">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="flex h-14 items-center justify-between">
             <div class="flex items-center gap-6">
               <%= link_to "TradeBot", root_path, class: "text-white font-bold text-lg" %>
+              <button type="button" data-action="toggle#toggle" class="sm:hidden text-gray-300 hover:text-white">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
               <div class="hidden sm:flex gap-4">
                 <%= link_to "Dashboard", root_path, class: "text-gray-300 hover:text-white text-sm" %>
                 <%= link_to "Credentials", exchange_credentials_path, class: "text-gray-300 hover:text-white text-sm" %>
                 <%= link_to "Bots", bots_path, class: "text-gray-300 hover:text-white text-sm" %>
                 <%= link_to "ML Models", ml_models_path, class: "text-gray-300 hover:text-white text-sm" %>
+                <%= link_to "ML Performance", ml_performance_index_path, class: "text-gray-300 hover:text-white text-sm" %>
                 <%= link_to "Trades", trades_path, class: "text-gray-300 hover:text-white text-sm" %>
                 <%= link_to "Portfolio", portfolio_path, class: "text-gray-300 hover:text-white text-sm" %>
               </div>
@@ -34,6 +40,17 @@
             <div class="flex items-center gap-4">
               <span class="text-gray-400 text-sm hidden sm:inline"><%= Current.user&.email_address %></span>
               <%= button_to "Logout", session_path, method: :delete, class: "text-gray-300 hover:text-white text-sm" %>
+            </div>
+          </div>
+          <div class="hidden pb-4 sm:hidden" data-toggle-target="menu">
+            <div class="flex flex-col gap-2">
+              <%= link_to "Dashboard", root_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "Credentials", exchange_credentials_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "Bots", bots_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "ML Models", ml_models_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "ML Performance", ml_performance_index_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "Trades", trades_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
+              <%= link_to "Portfolio", portfolio_path, class: "text-gray-300 hover:text-white text-sm py-1" %>
             </div>
           </div>
         </div>

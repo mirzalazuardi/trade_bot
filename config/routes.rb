@@ -27,6 +27,14 @@ Rails.application.routes.draw do
       post :retire
     end
   end
+  resources :ml_performance, only: [ :index ]
+
+  resources :cable, only: [] do
+    collection do
+      post :events
+    end
+  end
+
   post "telegram/webhook" => "telegram#webhook"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

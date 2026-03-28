@@ -7,6 +7,7 @@ Rails.application.config.after_initialize do
     return unless trade
 
     TelegramBot.new.send_trade_notification(user: order.user, trade: trade)
+    Dashboard::Broadcast.order_filled(order) if order.user
   end
 
   ActiveSupport::Notifications.subscribe("risk.violation") do |_name, payload|
@@ -14,6 +15,7 @@ Rails.application.config.after_initialize do
     return unless user&.telegram_enabled?
 
     TelegramBot.new.send_risk_alert(user: user, message: payload[:message])
+    Dashboard::Broadcast.risk_violation(payload[:bot], payload[:message].merge(user_id: user.id)) if payload[:bot]
   end
 
   ActiveSupport::Notifications.subscribe("approval.requested") do |_name, payload|
@@ -21,5 +23,12 @@ Rails.application.config.after_initialize do
     return unless approval
 
     Telegram::ApprovalRequest.call(approval: approval)
+  end
+
+  ActiveSupport::Notifications.subscribe("signal.generated") do |_name, payload|
+    bot = Bot.find_by(id: payload[:bot_id])
+    return unless bot
+
+    Dashboard::Broadcast.signal_generated(bot, payload[:signal]) if bot.user
   end
 end

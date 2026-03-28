@@ -14,6 +14,8 @@ class Trade < ApplicationRecord
   scope :losers, -> { where("net_pnl < 0") }
   scope :by_date_range, ->(from, to) { where(closed_at: from..to) }
 
+  after_update :update_ml_outcomes
+
   def closed?
     closed_at.present?
   end
@@ -25,5 +27,12 @@ class Trade < ApplicationRecord
   def roi
     return 0 if entry_price.zero?
     ((exit_price - entry_price) / entry_price * 100).round(2)
+  end
+
+  private
+
+  def update_ml_outcomes
+    return unless closed? && saved_change_to_closed_at?
+    MarketData::UpdateMlOutcomesJob.update_for_trade(self)
   end
 end

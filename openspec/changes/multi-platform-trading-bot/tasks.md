@@ -187,9 +187,9 @@
 - [x] 18.4 Add model export (LightGBM .txt + metadata JSON) to training notebook
 - [x] 18.5 Create rake task `ml:validate_features[pair,exchange]` — computes features in Ruby, compares against Python reference outputs (tolerance 1e-6)
 - [x] 18.6 Create MlPredictionLog model — records each prediction (bot_id, ml_model_id, confidence, signal_type, features snapshot)
-- [ ] 18.7 Implement ML performance tracking — correlate predictions with trade outcomes (accuracy, PnL contribution)
-- [ ] 18.8 Create ML performance dashboard page (accuracy rate, confidence distribution, PnL with AI vs without AI, filter rate)
-- [ ] 18.9 Document the full offline training → model upload → bot enable workflow
+- [x] 18.7 Implement ML performance tracking — correlate predictions with trade outcomes (accuracy, PnL contribution)
+- [x] 18.8 Create ML performance dashboard page (accuracy rate, confidence distribution, PnL with AI vs without AI, filter rate)
+- [x] 18.9 Document the full offline training → model upload → bot enable workflow
 
 ## 19. Telegram Integration
 
@@ -213,8 +213,8 @@
 - [x] 20.5 Create trades history view with pagination — columns include gross PnL, fees, net PnL, ML confidence
 - [x] 20.6 Create PortfolioController showing positions per exchange with current prices, fees, and net PnL
 - [x] 20.7 Create fee schedule management page (view/edit per exchange, sync from API button)
-- [ ] 20.8 Add Turbo Streams over Solid Cable (Action Cable via PostgreSQL) for live dashboard updates (price tickers, trade notifications, bot status changes)
-- [ ] 20.9 Ensure responsive layout works on mobile (test key flows on small viewport)
+- [x] 20.8 Add Turbo Streams over Solid Cable (Action Cable via PostgreSQL) for live dashboard updates (price tickers, trade notifications, bot status changes)
+- [x] 20.9 Ensure responsive layout works on mobile (test key flows on small viewport)
 
 ## 21. Event Subscriptions & Wiring
 
