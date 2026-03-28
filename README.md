@@ -118,43 +118,34 @@ bin/rails test
 
 ### P5: Risk Management (priority: high, effort: 1-2 days)
 
-The risk management layer has three gaps that must be addressed before live trading:
-
 **H1: Risk check stubs are empty**
-`RiskManagement::PreTradeCheck` has three placeholder methods with no implementation:
-- `check_position_size` — should enforce max position as % of portfolio
-- `check_daily_loss_limit` — should halt trading when daily drawdown exceeds 2%
-- `check_max_open_orders` — should cap concurrent open orders per bot/exchange
+`RiskManagement::PreTradeCheck` has three placeholder methods:
+- `check_position_size` — enforce max position as % of portfolio
+- `check_daily_loss_limit` — halt trading when daily drawdown exceeds 2%
+- `check_max_open_orders` — cap concurrent open orders per bot/exchange
 
 **H2: Balance check ignores fees**
-`check_balance` compares `available_balance >= quantity * price` but doesn't add estimated fees. Orders can fail at the exchange when the fee is deducted from the balance.
+`check_balance` compares `available_balance >= quantity * price` but doesn't add estimated fees.
 
 **H3: `bot.risk_config` has no backing model**
-Multiple services call `@bot.risk_config&.max_position_percent` etc., but `Bot` has no `risk_config` association. Always returns `nil`, silently falling back to hardcoded defaults (10% allocation, 10 max orders). Need to either:
-- Add a `risk_configs` table + `has_one :risk_config` on Bot, or
-- Add risk columns directly to the `bots` table (`max_position_pct`, `max_daily_loss_pct`, `max_open_orders`)
+Services call `@bot.risk_config&.max_position_percent` but Bot has no `risk_config` association.
 
 ### P6: Backtesting UI (priority: medium, effort: 1 day)
 
-The `Trading::BacktestService` exists but has no UI. Need to add:
-- `BacktestsController` with `create` action to run backtests
-- Form on bots#show to select date range and run backtest
-- Results view showing metrics (win rate, profit factor, max drawdown, equity curve)
-
-### P7: Paper Trading Close Logic (priority: medium, effort: few hours)
-
-| Status | Description |
-|--------|--------------|
-| ✅ FIXED | PaperTrading now creates/updates/closes positions on signal flip with real PnL calculation |
+`Trading::BacktestService` exists but needs UI:
+- `BacktestsController` with `create` action
+- Form on bots#show to select date range
+- Results view with metrics (win rate, profit factor, max drawdown)
 
 ### Other Minor Items
 
 | Item | Status | Description |
 |------|--------|--------------|
-| `Signal` constant warning | ✅ FIXED | Namespaced as `Strategy::Signal` in module |
-| Skipped tests (3) | — | ML predict tests that require candle fixtures. Not blocking. |
-| `UpdateMlOutcomesJob.perform_async` | — | Should be `perform_later` (Rails convention). |
+| `Signal` constant warning | ✅ FIXED | Namespaced as `Strategy::Signal` |
+| P7 Paper Trading | ✅ FIXED | Position tracking with real PnL |
+| `perform_async` → `perform_later` | — | Rails convention |
+| Skipped ML tests (3) | — | Require candle fixtures |
 
 ## License
 
-Proprietary. Not for redistribution.
+Proprietary.
