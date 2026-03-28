@@ -20,7 +20,8 @@ Self-hosted multi-exchange trading bot built on Rails 8.1. Supports crypto (Bina
 - **Fee-aware calculations** per exchange (percentage-based for crypto, pip-based for forex)
 - **Telegram integration** (commands, approval workflow, daily summary)
 - **Web dashboard** with portfolio, bots, trades, ML performance tracking
-- **Semi-auto mode** with Telegram approval for each trade
+- **Trading modes**: auto, semi-auto, paper trading, backtesting
+- **Backtesting** with historical candle replay and performance metrics
 
 ## Setup
 
