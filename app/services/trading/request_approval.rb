@@ -34,6 +34,7 @@ module Trading
       approval = Approval.create!(
         user: @bot.user,
         bot: @bot,
+        pair: @bot.pair,
         side: side,
         quantity: quantity,
         price: price,

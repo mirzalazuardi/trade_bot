@@ -4,7 +4,7 @@ class Approval < ApplicationRecord
 
   enum :status, { pending: "pending", approved: "approved", rejected: "rejected", expired: "expired" }, prefix: true
 
-  validates :side, :quantity, :price, presence: true
+  validates :side, :quantity, :price, :pair, presence: true
 
   scope :pending_approvals, -> { where(status: :pending) }
   scope :expired_approvals, -> { where("expires_at < ?", Time.current) }
