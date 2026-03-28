@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :bots, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :trades, dependent: :destroy
+  has_many :ml_models, dependent: :destroy
   has_many :approvals, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
