@@ -29,12 +29,12 @@ Rails.application.routes.draw do
     end
   end
   resources :ml_performance, only: [ :index ]
-  resources :custom_strategies do
+  resources :custom_strategies, controller: "strategies" do
     member do
       get :export
     end
   end
-  get "strategies", to: "custom_strategies#index"
+  get "strategies", to: "strategies#index", as: :strategies
 
   resources :cable, only: [] do
     collection do
