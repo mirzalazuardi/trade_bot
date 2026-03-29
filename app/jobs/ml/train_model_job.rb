@@ -34,16 +34,32 @@ module Ml
 
       metadata = JSON.parse(File.read(model_dir.join("metadata.json"))) rescue {}
 
-      model = MlModel.find_or_initialize_by(user: user, name: metadata["name"] || "Signal Filter")
-      model.update!(
-        version: (model.persisted? ? model.version + 1 : 1),
-        model_type: model_type.to_sym,
-        status: :testing,
-        file_path: model_path.to_s,
-        training_date: Date.today,
-        feature_list: metadata["feature_list"] || %w[open high low close volume rsi macd volatility],
-        performance_metrics: metadata["performance_metrics"] || {}
-      )
+      model_name = "#{pair} #{model_type.titleize} #{Date.today}"
+      existing = MlModel.where(user: user, name: model_name).first
+      if existing
+        existing.update!(
+          version: existing.version + 1,
+          model_type: model_type.to_sym,
+          status: :testing,
+          file_path: model_path.to_s,
+          training_date: Date.today,
+          feature_list: metadata["feature_list"] || %w[open high low close volume rsi macd volatility],
+          performance_metrics: metadata["performance_metrics"] || {}
+        )
+        model = existing
+      else
+        model = MlModel.create!(
+          user: user,
+          name: model_name,
+          version: 1,
+          model_type: model_type.to_sym,
+          status: :testing,
+          file_path: model_path.to_s,
+          training_date: Date.today,
+          feature_list: metadata["feature_list"] || %w[open high low close volume rsi macd volatility],
+          performance_metrics: metadata["performance_metrics"] || {}
+        )
+      end
 
       accuracy = model.performance_metrics["test_accuracy"]
       broadcast_progress(
