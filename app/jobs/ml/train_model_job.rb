@@ -2,7 +2,7 @@ module Ml
   class TrainModelJob < ApplicationJob
     queue_as :default
 
-    def perform(user_id:, pair:, days:)
+    def perform(user_id:, pair:, days:, model_type: "lightgbm", features: "indicators", profit_pct: 2.0, loss_pct: 1.0)
       user = User.find(user_id)
       exchange = "binance"
       interval = "1h"
@@ -16,13 +16,13 @@ module Ml
 
       csv_path = export_csv(exchange, pair, interval, days)
 
-      broadcast_progress(user, "Training LightGBM model...")
+      broadcast_progress(user, "Training #{model_type} model (#{features})...")
 
       model_dir = Rails.root.join("storage/ml_models")
       model_dir.mkpath
       script = Rails.root.join("scripts/train_model.py")
 
-      output = `python3 #{script} #{csv_path} #{model_dir} 2>&1`
+      output = `python3 #{script} #{csv_path} #{model_dir} #{model_type} #{features} #{profit_pct} #{loss_pct} 2>&1`
       model_path = model_dir.join("signal_model.txt")
 
       unless model_path.exist?
@@ -37,7 +37,7 @@ module Ml
       model = MlModel.find_or_initialize_by(user: user, name: metadata["name"] || "Signal Filter")
       model.update!(
         version: (model.persisted? ? model.version + 1 : 1),
-        model_type: :lightgbm,
+        model_type: model_type.to_sym,
         status: :testing,
         file_path: model_path.to_s,
         training_date: Date.today,

@@ -42,10 +42,22 @@ class MlModelsController < ApplicationController
   def train
     pair = params[:pair].presence || "BTC/USDT"
     days = (params[:days].presence || 90).to_i
+    model_type = params[:model_type].presence || "lightgbm"
+    features = params[:features].presence || "indicators"
+    profit_pct = (params[:profit_pct].presence || 2.0).to_f
+    loss_pct = (params[:loss_pct].presence || 1.0).to_f
 
-    Ml::TrainModelJob.perform_later(user_id: current_user.id, pair: pair, days: days)
+    Ml::TrainModelJob.perform_later(
+      user_id: current_user.id,
+      pair: pair,
+      days: days,
+      model_type: model_type,
+      features: features,
+      profit_pct: profit_pct,
+      loss_pct: loss_pct
+    )
 
-    redirect_to ml_models_path, notice: "Training started for #{pair} (#{days} days). Progress will appear below."
+    redirect_to ml_models_path, notice: "Training started for #{pair} (#{days} days, #{model_type}). Progress will appear below."
   end
 
   def activate

@@ -26,6 +26,13 @@
       ], "BTC/USDT"), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
     </div>
     <div>
+      <%= f.label :model_type, "Model Type", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :model_type, options_for_select([
+        ["LightGBM", "lightgbm"],
+        ["ONNX", "onnx"]
+      ], "lightgbm"), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
       <%= f.label :days, "History (days)", class: "block text-sm font-medium text-gray-700 mb-1" %>
       <%= f.select :days, options_for_select([
         ["30 days", 30],
@@ -33,6 +40,22 @@
         ["90 days", 90],
         ["180 days", 180]
       ], 90), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.label :features, "Features", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :features, options_for_select([
+        ["Basic (OHLCV)", "basic"],
+        ["With Indicators", "indicators"],
+        ["Full Feature Set", "full"]
+      ], "indicators"), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.label :profit_pct, "Profit Target (%)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.number_field :profit_pct, value: 2.0, step: 0.1, min: 0.1, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.label :loss_pct, "Stop Loss (%)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.number_field :loss_pct, value: 1.0, step: 0.1, min: 0.1, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
     </div>
     <div>
       <%= f.submit "Start Training", class: "inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 cursor-pointer", data: { turbo_submits_with: "Training..." } %>
