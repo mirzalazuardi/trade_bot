@@ -53,6 +53,23 @@
     </div>
   </div>
 
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Run Backtest</h2>
+    <%= form_with url: bot_backtests_path(@bot), method: :post, class: "flex gap-4 items-end" do |f| %>
+      <div>
+        <%= f.label :from_date, "From", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.date_field :from_date, value: 30.days.ago.to_s, class: "mt-1 block rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.label :to_date, "To", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.date_field :to_date, value: Date.today.to_s, class: "mt-1 block rounded-md border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= f.submit "Run Backtest", class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="flex space-x-2">
     <%= link_to "Edit", edit_bot_path(@bot), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
     <%= link_to "Back", bots_path, class: "bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300" %>

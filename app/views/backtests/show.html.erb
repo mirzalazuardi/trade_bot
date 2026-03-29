@@ -1,0 +1,108 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Backtest Results</h1>
+    <%= link_to "Back to Bot", @bot, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-2"><%= @bot.exchange_name %> / <%= @bot.pair %></h2>
+    <p class="text-gray-600">Strategy: <%= @bot.strategy %></p>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Starting Cash</div>
+      <div class="text-2xl font-bold"><%= number_to_currency(@results[:starting_cash]) %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Ending Cash</div>
+      <div class="text-2xl font-bold <%= @results[:ending_cash] >= @results[:starting_cash] ? 'text-green-600' : 'text-red-600' %>">
+        <%= number_to_currency(@results[:ending_cash]) %>
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Total PnL</div>
+      <div class="text-2xl font-bold <%= @results[:total_pnl] >= 0 ? 'text-green-600' : 'text-red-600' %>">
+        <%= number_to_currency(@results[:total_pnl]) %>
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Win Rate</div>
+      <div class="text-2xl font-bold"><%= @results[:win_rate] %>%</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Total Trades</div>
+      <div class="text-2xl font-bold"><%= @results[:total_trades] %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Wins</div>
+      <div class="text-2xl font-bold text-green-600"><%= @results[:win_count] %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Losses</div>
+      <div class="text-2xl font-bold text-red-600"><%= @results[:loss_count] %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Max Drawdown</div>
+      <div class="text-2xl font-bold text-red-600"><%= @results[:max_drawdown] %>%</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Avg Win</div>
+      <div class="text-xl font-semibold text-green-600"><%= number_to_currency(@results[:avg_win]) %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Avg Loss</div>
+      <div class="text-xl font-semibold text-red-600"><%= number_to_currency(@results[:avg_loss]) %></div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <div class="text-sm text-gray-500">Profit Factor</div>
+      <div class="text-xl font-semibold"><%= @results[:profit_factor] %></div>
+    </div>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Trade History</h2>
+    <% if @results[:trades].any? %>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="text-left text-sm text-gray-500">
+              <th class="pb-2">Entry Time</th>
+              <th class="pb-2">Exit Time</th>
+              <th class="pb-2">Side</th>
+              <th class="pb-2">Qty</th>
+              <th class="pb-2">Entry</th>
+              <th class="pb-2">Exit</th>
+              <th class="pb-2">Fees</th>
+              <th class="pb-2">PnL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @results[:trades].each do |trade| %>
+              <tr class="border-t">
+                <td class="py-2 text-sm"><%= trade[:entry_time]&.strftime("%Y-%m-%d %H:%M") %></td>
+                <td class="py-2 text-sm"><%= trade[:exit_time]&.strftime("%Y-%m-%d %H:%M") %></td>
+                <td class="py-2"><span class="px-2 py-1 rounded text-sm <%= trade[:side] == 'buy' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>"><%= trade[:side] %></span></td>
+                <td class="py-2"><%= trade[:quantity] %></td>
+                <td class="py-2"><%= trade[:entry_price] %></td>
+                <td class="py-2"><%= trade[:exit_price] %></td>
+                <td class="py-2"><%= number_to_currency(trade[:fees]) %></td>
+                <td class="py-2 font-medium <%= trade[:pnl] >= 0 ? 'text-green-600' : 'text-red-600' %>">
+                  <%= number_to_currency(trade[:pnl]) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500">No trades generated during backtest.</p>
+    <% end %>
+  </div>
+</div>

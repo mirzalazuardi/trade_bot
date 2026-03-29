@@ -144,21 +144,12 @@ bin/rails test
 
 ## Known Issues — Remaining Fixes
 
-### P6: Backtesting UI (priority: medium)
-
-`Trading::BacktestService` exists but needs UI:
-- `BacktestsController` with `create` action
-- Form on bots#show to select date range
-- Results view with metrics
-
 ### All Fixed ✅
 
 | Item | Status |
 |------|--------|
 | P5 Risk Management | ✅ FIXED |
-| H1 PreTradeCheck stubs | ✅ FIXED |
-| H2 Balance check fees | ✅ FIXED |
-| H3 risk_config model | ✅ FIXED |
+| P6 Backtesting UI | ✅ FIXED |
 | Signal constant | ✅ FIXED |
 | Paper Trading | ✅ FIXED |
 | perform_async | ✅ FIXED |

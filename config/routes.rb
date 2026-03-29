@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post :stop
       post :toggle_ai
     end
+    resources :backtests, only: [ :create, :show ]
   end
   resources :trades, only: [ :index ]
   get "portfolio", to: "portfolio#show", as: :portfolio
