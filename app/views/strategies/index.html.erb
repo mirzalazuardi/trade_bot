@@ -36,7 +36,7 @@
               <td class="py-2"><%= strategy.config["version"] %></td>
               <td class="py-2 text-sm text-gray-500"><%= strategy.created_at.strftime("%Y-%m-%d") %></td>
               <td class="py-2 space-x-2">
-                <%= link_to "View", "#", class: "text-blue-600 hover:underline" %>
+                <%= link_to "View JSON", custom_strategy_path(strategy, format: :json), class: "text-blue-600 hover:underline", target: "_blank" %>
                 <%= link_to "Export", export_custom_strategy_path(strategy), class: "text-green-600 hover:underline" %>
                 <%= button_to "Delete", custom_strategy_path(strategy), method: :delete, data: { confirm: "Delete this strategy?" }, class: "text-red-600 hover:underline" %>
               </td>
@@ -60,9 +60,10 @@
       </thead>
       <tbody>
         <% @built_in.each do |name| %>
+          <% klass = Strategy::Registry.get(name) %>
           <tr class="border-t">
             <td class="py-2 font-medium"><%= name.titleize %></td>
-            <td class="py-2 text-sm text-gray-500">—</td>
+            <td class="py-2 text-sm text-gray-500"><%= klass.required_indicators.map(&:to_s).join(", ") %></td>
           </tr>
         <% end %>
       </tbody>

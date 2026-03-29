@@ -8,6 +8,42 @@
   </div>
 </div>
 
+<div class="mt-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+  <h2 class="text-base font-semibold text-gray-900 mb-4">Train New Model</h2>
+  <p class="text-sm text-gray-500 mb-4">Fetch candles from Binance, compute features, and train a LightGBM model automatically.</p>
+  <%= form_with url: train_ml_models_path, method: :post, class: "flex flex-wrap items-end gap-4" do |f| %>
+    <div>
+      <%= f.label :pair, "Trading Pair", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :pair, options_for_select([
+        ["BTC/USDT", "BTC/USDT"],
+        ["ETH/USDT", "ETH/USDT"],
+        ["SOL/USDT", "SOL/USDT"],
+        ["BNB/USDT", "BNB/USDT"],
+        ["XRP/USDT", "XRP/USDT"],
+        ["ADA/USDT", "ADA/USDT"],
+        ["DOGE/USDT", "DOGE/USDT"],
+        ["DOT/USDT", "DOT/USDT"]
+      ], "BTC/USDT"), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.label :days, "History (days)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :days, options_for_select([
+        ["30 days", 30],
+        ["60 days", 60],
+        ["90 days", 90],
+        ["180 days", 180]
+      ], 90), {}, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div>
+      <%= f.submit "Start Training", class: "inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 cursor-pointer", data: { turbo_submits_with: "Training..." } %>
+    </div>
+  <% end %>
+</div>
+
+<%= turbo_stream_from "ml_training_#{current_user.id}" %>
+
+<div class="mt-4" id="ml_training_status"></div>
+
 <div class="mt-8 flex flex-col">
   <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -38,9 +74,14 @@
                     <%= ml_model.status %>
                   </span>
                 </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= ml_model.training_date&.to_s(:db) %></td>
-                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                  <%= link_to "Edit", edit_ml_model_path(ml_model), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= ml_model.training_date&.to_fs(:db) %></td>
+                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-2">
+                  <% if ml_model.status == "active" %>
+                    <%= button_to "Deactivate", retire_ml_model_path(ml_model), method: :post, class: "text-yellow-600 hover:text-yellow-900" %>
+                  <% else %>
+                    <%= button_to "Activate", activate_ml_model_path(ml_model), method: :post, class: "text-green-600 hover:text-green-900" %>
+                  <% end %>
+                  <%= link_to "Edit", edit_ml_model_path(ml_model), class: "text-indigo-600 hover:text-indigo-900" %>
                   <%= button_to "Delete", ml_model_path(ml_model), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" %>
                 </td>
               </tr>
