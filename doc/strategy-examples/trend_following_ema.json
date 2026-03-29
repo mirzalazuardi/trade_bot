@@ -1,0 +1,53 @@
+{
+  "name": "Trend Following EMA Crossover",
+  "version": "1.0",
+  "author": "TradeBot",
+  "description": "Classic trend following with EMA 20/50 crossover, confirmed by MACD histogram momentum and volume surge. Rides trends, avoids choppy ranges. Best on trending pairs (BTC/USDT, SOL/USDT, GBP/USD) in 1h-4h timeframe.",
+  "timeframe": "1h",
+  "instruments": ["BTC/USDT", "ETH/USDT", "SOL/USDT", "GBP/USD"],
+  "indicators": {
+    "ema": { "periods": [20, 50] },
+    "macd": { "fast": 12, "slow": 26, "signal": 9 },
+    "rsi": { "period": 14 }
+  },
+  "rules": [
+    {
+      "name": "Bullish EMA cross + MACD momentum",
+      "action": "buy",
+      "confidence": 0.85,
+      "conditions": [
+        { "left": "close", "op": ">", "right": "sma_20" },
+        { "left": "sma_20", "op": ">", "right": "sma_50" },
+        { "left": "macd_histogram", "op": ">", "right": "0" },
+        { "left": "macd_histogram", "op": ">", "right": "prev_macd_histogram" },
+        { "left": "rsi", "op": ">", "right": "{{rsi_floor}}" },
+        { "left": "rsi", "op": "<", "right": "{{rsi_ceiling}}" }
+      ]
+    },
+    {
+      "name": "Bearish EMA cross + MACD momentum",
+      "action": "sell",
+      "confidence": 0.85,
+      "conditions": [
+        { "left": "close", "op": "<", "right": "sma_20" },
+        { "left": "sma_20", "op": "<", "right": "sma_50" },
+        { "left": "macd_histogram", "op": "<", "right": "0" },
+        { "left": "macd_histogram", "op": "<", "right": "prev_macd_histogram" },
+        { "left": "rsi", "op": "<", "right": "{{rsi_ceiling}}" },
+        { "left": "rsi", "op": ">", "right": "{{rsi_floor}}" }
+      ]
+    }
+  ],
+  "risk": {
+    "stop_loss": "2.0 * atr",
+    "take_profit": "3.0 * atr",
+    "min_rr_ratio": 1.5,
+    "trailing_stop": "1.5 * atr"
+  },
+  "parameters": {
+    "ema_fast": 20,
+    "ema_slow": 50,
+    "rsi_floor": 30,
+    "rsi_ceiling": 70
+  }
+}

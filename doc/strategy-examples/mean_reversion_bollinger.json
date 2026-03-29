@@ -1,0 +1,46 @@
+{
+  "name": "Mean Reversion Bollinger",
+  "version": "1.0",
+  "author": "TradeBot",
+  "description": "Mean reversion at Bollinger Band extremes with RSI confirmation. Fades overextended moves when RSI diverges from price. Best on ranging pairs (EUR/USD, XAU/USD) in 1h timeframe. Targets BB middle band.",
+  "timeframe": "1h",
+  "instruments": ["EUR/USD", "XAU/USD", "BTC/USDT"],
+  "indicators": {
+    "rsi": { "period": 14 },
+    "bollinger": { "period": 20, "stddev": 2.0 }
+  },
+  "rules": [
+    {
+      "name": "BB lower touch + RSI oversold",
+      "action": "buy",
+      "confidence": 0.8,
+      "conditions": [
+        { "left": "close", "op": "<=", "right": "bb_lower" },
+        { "left": "rsi", "op": "<", "right": "{{oversold}}" },
+        { "left": "volume_ratio", "op": ">", "right": "1.2" }
+      ]
+    },
+    {
+      "name": "BB upper touch + RSI overbought",
+      "action": "sell",
+      "confidence": 0.8,
+      "conditions": [
+        { "left": "close", "op": ">=", "right": "bb_upper" },
+        { "left": "rsi", "op": ">", "right": "{{overbought}}" },
+        { "left": "volume_ratio", "op": ">", "right": "1.2" }
+      ]
+    }
+  ],
+  "risk": {
+    "stop_loss": "1.5 * atr",
+    "take_profit": "bb_middle",
+    "min_rr_ratio": 1.5
+  },
+  "parameters": {
+    "bb_period": 20,
+    "bb_stddev": 2.0,
+    "rsi_period": 14,
+    "oversold": 30,
+    "overbought": 70
+  }
+}

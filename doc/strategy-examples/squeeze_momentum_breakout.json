@@ -1,0 +1,50 @@
+{
+  "name": "Squeeze Momentum Breakout",
+  "version": "1.0",
+  "author": "TradeBot",
+  "description": "Carter-style Bollinger Band squeeze detection. When BB narrows inside Keltner Channel, volatility is compressing. Trade the breakout when squeeze fires with MACD momentum direction. High win rate on crypto and forex during session opens.",
+  "timeframe": "1h",
+  "instruments": ["BTC/USDT", "ETH/USDT", "EUR/USD", "XAU/USD"],
+  "indicators": {
+    "bollinger": { "period": 20, "stddev": 2.0 },
+    "macd": { "fast": 12, "slow": 26, "signal": 9 },
+    "rsi": { "period": 14 }
+  },
+  "rules": [
+    {
+      "name": "Squeeze fire long — BB expands + MACD positive momentum",
+      "action": "buy",
+      "confidence": 0.9,
+      "conditions": [
+        { "left": "bb_width", "op": ">", "right": "{{squeeze_threshold}}" },
+        { "left": "macd_histogram", "op": ">", "right": "0" },
+        { "left": "macd_histogram", "op": ">", "right": "prev_macd_histogram" },
+        { "left": "close", "op": ">", "right": "sma_20" },
+        { "left": "volume_ratio", "op": ">", "right": "{{volume_surge}}" }
+      ]
+    },
+    {
+      "name": "Squeeze fire short — BB expands + MACD negative momentum",
+      "action": "sell",
+      "confidence": 0.9,
+      "conditions": [
+        { "left": "bb_width", "op": ">", "right": "{{squeeze_threshold}}" },
+        { "left": "macd_histogram", "op": "<", "right": "0" },
+        { "left": "macd_histogram", "op": "<", "right": "prev_macd_histogram" },
+        { "left": "close", "op": "<", "right": "sma_20" },
+        { "left": "volume_ratio", "op": ">", "right": "{{volume_surge}}" }
+      ]
+    }
+  ],
+  "risk": {
+    "stop_loss": "1.5 * atr",
+    "take_profit": "3.0 * atr",
+    "min_rr_ratio": 2.0
+  },
+  "parameters": {
+    "bb_period": 20,
+    "bb_stddev": 2.0,
+    "squeeze_threshold": 0.02,
+    "volume_surge": 1.5
+  }
+}
