@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_075358) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_104349) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "approval_status", ["pending", "approved", "rejected", "expired"]
-  create_enum "bot_mode", ["auto", "semi_auto"]
+  create_enum "bot_mode", ["auto", "semi_auto", "paper_trade", "backtest"]
   create_enum "bot_status", ["active", "paused", "stopped"]
   create_enum "ml_model_status", ["testing", "active", "retired"]
   create_enum "order_status", ["pending", "submitted", "open", "partially_filled", "filled", "cancelled", "failed"]
@@ -180,15 +180,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_075358) do
     t.string "native_order_id"
     t.string "order_type"
     t.string "pair"
+    t.bigint "position_id"
     t.decimal "price", precision: 20, scale: 8
     t.decimal "quantity", precision: 20, scale: 8
     t.string "side", default: "buy", null: false
     t.enum "status", default: "pending", enum_type: "order_status"
+    t.bigint "trade_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["bot_id", "status"], name: "index_orders_on_bot_id_and_status"
     t.index ["exchange_name", "pair", "status"], name: "index_orders_on_exchange_name_and_pair_and_status"
     t.index ["native_order_id"], name: "index_orders_on_native_order_id"
+    t.index ["position_id"], name: "index_orders_on_position_id"
+    t.index ["trade_id"], name: "index_orders_on_trade_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -287,6 +291,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_075358) do
   add_foreign_key "ml_prediction_logs", "users"
   add_foreign_key "monitored_pairs", "users"
   add_foreign_key "orders", "bots"
+  add_foreign_key "orders", "positions"
+  add_foreign_key "orders", "trades"
   add_foreign_key "orders", "users"
   add_foreign_key "positions", "users"
   add_foreign_key "sessions", "users"

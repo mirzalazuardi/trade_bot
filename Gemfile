@@ -70,6 +70,7 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "playwright-ruby-client", "~> 1.58"
   gem "webmock"
   gem "vcr"
   gem "minitest"
