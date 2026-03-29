@@ -1,0 +1,31 @@
+{
+  "name": "MACD Crossover",
+  "version": "1.0",
+  "description": "Buy when MACD crosses above signal line, sell when crosses below",
+  "indicators": {
+    "macd": {
+      "fast_period": 12,
+      "slow_period": 26,
+      "signal_period": 9
+    }
+  },
+  "entry": {
+    "buy": {
+      "condition": "macd > signal && prev_macd <= prev_signal",
+      "confidence": "abs(macd - signal) * 10"
+    },
+    "sell": {
+      "condition": "macd < signal && prev_macd >= prev_signal",
+      "confidence": "abs(signal - macd) * 10"
+    }
+  },
+  "exit": {
+    "buy": "macd < signal",
+    "sell": "macd > signal"
+  },
+  "parameters": {
+    "fast_period": 12,
+    "slow_period": 26,
+    "signal_period": 9
+  }
+}

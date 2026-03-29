@@ -1,0 +1,70 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Strategies</h1>
+    <%= button_to "Import JSON", "#", class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700", data: { turbo_action: "advance" } %>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Import Strategy</h2>
+    <%= form_with url: custom_strategies_path, multipart: true, class: "flex gap-4 items-end" do |f| %>
+      <div>
+        <%= f.file :file, accept: ".json", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+      </div>
+      <div>
+        <%= f.submit "Import", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Your Custom Strategies</h2>
+    <% if @strategies.any? %>
+      <table class="w-full">
+        <thead>
+          <tr class="text-left text-sm text-gray-500">
+            <th class="pb-2">Name</th>
+            <th class="pb-2">Version</th>
+            <th class="pb-2">Created</th>
+            <th class="pb-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @strategies.each do |strategy| %>
+            <tr class="border-t">
+              <td class="py-2 font-medium"><%= strategy.name %></td>
+              <td class="py-2"><%= strategy.config["version"] %></td>
+              <td class="py-2 text-sm text-gray-500"><%= strategy.created_at.strftime("%Y-%m-%d") %></td>
+              <td class="py-2 space-x-2">
+                <%= link_to "View", "#", class: "text-blue-600 hover:underline" %>
+                <%= link_to "Export", export_custom_strategy_path(strategy), class: "text-green-600 hover:underline" %>
+                <%= button_to "Delete", custom_strategy_path(strategy), method: :delete, data: { confirm: "Delete this strategy?" }, class: "text-red-600 hover:underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-gray-500">No custom strategies yet. Import a JSON file to get started.</p>
+    <% end %>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Built-in Strategies</h2>
+    <table class="w-full">
+      <thead>
+        <tr class="text-left text-sm text-gray-500">
+          <th class="pb-2">Name</th>
+          <th class="pb-2">Indicators</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @built_in.each do |name| %>
+          <tr class="border-t">
+            <td class="py-2 font-medium"><%= name.titleize %></td>
+            <td class="py-2 text-sm text-gray-500">—</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

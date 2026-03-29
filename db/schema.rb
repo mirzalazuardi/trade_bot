@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_073657) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_074322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,6 +78,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_073657) do
     t.decimal "volume", precision: 30, scale: 8
     t.index ["exchange_name", "pair", "interval", "created_at"], name: "idx_candle_cleanup"
     t.index ["exchange_name", "pair", "interval", "timestamp"], name: "idx_candle_unique", unique: true
+  end
+
+  create_table "custom_strategies", force: :cascade do |t|
+    t.jsonb "config"
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_custom_strategies_on_user_id"
   end
 
   create_table "exchange_credentials", force: :cascade do |t|
@@ -269,6 +278,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_073657) do
   add_foreign_key "approvals", "bots"
   add_foreign_key "approvals", "users"
   add_foreign_key "bots", "users"
+  add_foreign_key "custom_strategies", "users"
   add_foreign_key "exchange_credentials", "users"
   add_foreign_key "ml_models", "users"
   add_foreign_key "ml_prediction_logs", "bots"
