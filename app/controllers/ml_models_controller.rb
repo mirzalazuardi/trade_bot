@@ -39,14 +39,23 @@ class MlModelsController < ApplicationController
     redirect_to ml_models_url, notice: "ML model was successfully destroyed."
   end
 
+  def train
+    pair = params[:pair].presence || "BTC/USDT"
+    days = (params[:days].presence || 90).to_i
+
+    Ml::TrainModelJob.perform_later(user_id: current_user.id, pair: pair, days: days)
+
+    redirect_to ml_models_path, notice: "Training started for #{pair} (#{days} days). Progress will appear below."
+  end
+
   def activate
-    @ml_model.activate!
-    redirect_to @ml_model, notice: "ML model activated."
+    @ml_model.update!(status: :active)
+    redirect_to ml_models_path, notice: "#{@ml_model.name} activated."
   end
 
   def retire
-    @ml_model.retire!
-    redirect_to @ml_model, notice: "ML model retired."
+    @ml_model.update!(status: :retired)
+    redirect_to ml_models_path, notice: "#{@ml_model.name} deactivated."
   end
 
   private
