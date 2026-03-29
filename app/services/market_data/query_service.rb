@@ -4,11 +4,11 @@ module MarketData
       query = Candle.by_exchange(exchange).by_pair(pair).by_interval(interval)
 
       if from
-        query = query.where("timestamp >= ?", from.to_i)
+        query = query.where("timestamp >= ?", from.to_time.to_i)
       end
 
       if to
-        query = query.where("timestamp <= ?", to.to_i)
+        query = query.where("timestamp <= ?", to.to_time.to_i)
       end
 
       query = query.order(timestamp: :desc)

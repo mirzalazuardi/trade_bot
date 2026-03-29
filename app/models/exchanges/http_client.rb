@@ -87,7 +87,7 @@ module Exchanges
     def handle_response(response)
       case response.status
       when 200..299
-        response.body
+        deep_symbolize(response.body)
       when 401
         raise AuthenticationError, "Invalid credentials"
       when 403
@@ -108,6 +108,14 @@ module Exchanges
         true
       else
         false
+      end
+    end
+
+    def deep_symbolize(obj)
+      case obj
+      when Hash then obj.each_with_object({}) { |(k, v), h| h[k.to_sym] = deep_symbolize(v) }
+      when Array then obj.map { |v| deep_symbolize(v) }
+      else obj
       end
     end
 

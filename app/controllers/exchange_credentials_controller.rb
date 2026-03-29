@@ -1,6 +1,6 @@
 class ExchangeCredentialsController < ApplicationController
-  before_action :set_credential, only: %i[show edit update destroy test_connection]
   before_action :require_authentication
+  before_action :set_credential, only: %i[show edit update destroy test_connection]
 
   def index
     @credentials = current_user.exchange_credentials.order(created_at: :desc)

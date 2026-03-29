@@ -24,11 +24,13 @@ class ExchangeCredential < ApplicationRecord
   def adapter
     return nil unless adapter_class
 
+    accepted = adapter_class.instance_method(:initialize).parameters.map(&:last)
+
     credentials = {}
-    credentials[:api_key] = api_key if api_key.present?
-    credentials[:api_secret] = api_secret if api_secret.present?
-    credentials[:account_id] = account_id if account_id.present?
-    credentials[:environment] = environment&.to_sym if environment
+    credentials[:api_key] = api_key if api_key.present? && accepted.include?(:api_key)
+    credentials[:api_secret] = api_secret if api_secret.present? && accepted.include?(:api_secret)
+    credentials[:account_id] = account_id if account_id.present? && accepted.include?(:account_id)
+    credentials[:environment] = environment&.to_sym if environment.present? && accepted.include?(:environment)
 
     adapter_class.new(**credentials)
   end

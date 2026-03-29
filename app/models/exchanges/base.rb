@@ -47,7 +47,7 @@ module Exchanges
     def test_connection
       fetch_balance
       true
-    rescue Exchanges::Error
+    rescue StandardError
       false
     end
 

@@ -1,5 +1,13 @@
+require "ostruct"
+
 module FeeManagement
   class FeeCalculator
+    def self.call(exchange_name:, side:, quantity:, price:)
+      amount = quantity * price
+      total = estimate_fee(exchange_name: exchange_name, side: side, amount: amount, quantity: quantity)
+      OpenStruct.new(total: total)
+    end
+
     def self.estimate_fee(exchange_name:, side:, amount:, order_type: :taker, pair: nil, quantity: nil)
       exchange_fee = ExchangeFee.find_by(exchange_name: exchange_name, is_active: true)
       return 0 unless exchange_fee

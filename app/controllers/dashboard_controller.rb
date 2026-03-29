@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
   private
 
   def fetch_balances
-    credentials = current_user.exchange_credentials.active.includes(:exchange_name)
+    credentials = current_user.exchange_credentials.active
     credentials.map do |cred|
       begin
         adapter = Exchanges::Registry.get(cred.exchange_name).new(cred)
@@ -59,7 +59,7 @@ class DashboardController < ApplicationController
 
     MAJOR_MARKETS[:crypto].each do |market|
       begin
-        adapter = Exchanges::Registry.get("binance").new(nil)
+        adapter = Exchanges::Registry.get("binance").new
         ticker = adapter.fetch_ticker(market[:pair])
         prices[:crypto] << {
           pair: market[:pair],
@@ -73,7 +73,7 @@ class DashboardController < ApplicationController
 
     MAJOR_MARKETS[:forex].each do |market|
       begin
-        adapter = Exchanges::Registry.get("oanda").new(nil)
+        adapter = Exchanges::Registry.get("oanda").new
         ticker = adapter.fetch_ticker(market[:pair])
         prices[:forex] << {
           pair: market[:pair],
@@ -87,7 +87,7 @@ class DashboardController < ApplicationController
 
     MAJOR_MARKETS[:commodities].each do |market|
       begin
-        adapter = Exchanges::Registry.get("oanda").new(nil)
+        adapter = Exchanges::Registry.get("oanda").new
         ticker = adapter.fetch_ticker(market[:pair])
         prices[:commodities] << {
           pair: market[:pair],
