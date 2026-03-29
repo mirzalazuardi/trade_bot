@@ -37,6 +37,13 @@
               </span>
             </td>
             <td class="px-4 py-3 text-right space-x-2">
+              <% if bot.active? %>
+                <%= button_to "Pause", pause_bot_path(bot), method: :post, class: "text-yellow-600 hover:underline" %>
+              <% elsif bot.paused? %>
+                <%= button_to "Resume", resume_bot_path(bot), method: :post, class: "text-green-600 hover:underline" %>
+              <% else %>
+                <%= button_to "Activate", resume_bot_path(bot), method: :post, class: "text-green-600 hover:underline" %>
+              <% end %>
               <%= link_to "View", bot_path(bot), class: "text-blue-600 hover:underline" %>
               <%= link_to "Edit", edit_bot_path(bot), class: "text-gray-600 hover:underline" %>
             </td>

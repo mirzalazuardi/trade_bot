@@ -14,7 +14,7 @@ class BotsController < ApplicationController
     @strategies = Strategy::Registry.available
     @custom_strategies = current_user.custom_strategies.order(:name)
     @exchanges = Exchanges::Registry.available
-    @ml_models = current_user.ml_models.active_models if current_user.ml_models.any?
+    @ml_models = current_user.ml_models.where.not(status: :retired)
   end
 
   def create
@@ -26,6 +26,7 @@ class BotsController < ApplicationController
       @strategies = Strategy::Registry.available
       @custom_strategies = current_user.custom_strategies.order(:name)
       @exchanges = Exchanges::Registry.available
+      @ml_models = current_user.ml_models.where.not(status: :retired)
       render :new, status: :unprocessable_entity
     end
   end
@@ -34,7 +35,7 @@ class BotsController < ApplicationController
     @strategies = Strategy::Registry.available
     @custom_strategies = current_user.custom_strategies.order(:name)
     @exchanges = Exchanges::Registry.available
-    @ml_models = current_user.ml_models.active_models if current_user.ml_models.any?
+    @ml_models = current_user.ml_models.where.not(status: :retired)
   end
 
   def update
@@ -52,17 +53,17 @@ class BotsController < ApplicationController
 
   def pause
     @bot.pause!
-    redirect_to @bot, notice: "Bot paused."
+    redirect_back fallback_location: bots_path, notice: "#{@bot.pair} bot paused."
   end
 
   def resume
     @bot.resume!
-    redirect_to @bot, notice: "Bot resumed."
+    redirect_back fallback_location: bots_path, notice: "#{@bot.pair} bot resumed."
   end
 
   def stop
     @bot.stop!
-    redirect_to @bot, notice: "Bot stopped."
+    redirect_back fallback_location: bots_path, notice: "#{@bot.pair} bot stopped."
   end
 
   def toggle_ai

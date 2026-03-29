@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     end
   end
   resources :ml_models do
+    collection do
+      post :train
+    end
     member do
       post :activate
       post :retire

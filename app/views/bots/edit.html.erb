@@ -35,12 +35,14 @@
       <%= f.label :ai_enabled, class: "ml-2 text-sm text-gray-700" %>
     </div>
 
-    <% if @ml_models&.any? %>
-      <div>
-        <%= f.label :ml_model_id, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.select :ml_model_id, @ml_models.map { |m| ["#{m.name} v#{m.version}", m.id] }, { include_blank: "None" }, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
-      </div>
-    <% end %>
+    <div>
+      <%= f.label :ml_model_id, "ML Model", class: "block text-sm font-medium text-gray-700" %>
+      <% if @ml_models.any? %>
+        <%= f.select :ml_model_id, @ml_models.map { |m| ["#{m.name} v#{m.version} (#{m.status})", m.id] }, { include_blank: "None" }, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+      <% else %>
+        <p class="mt-1 text-sm text-gray-500">No models available. <%= link_to "Train one first", ml_models_path, class: "text-indigo-600 hover:text-indigo-900 underline" %>.</p>
+      <% end %>
+    </div>
 
     <div>
       <%= f.submit "Update Bot", class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
