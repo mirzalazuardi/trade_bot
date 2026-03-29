@@ -45,13 +45,15 @@ class Position < ApplicationRecord
   def close!(exit_price:, fees:)
     pnl = gross_pnl_at(exit_price)
 
-    update!(
+    assign_attributes(
       status: :closed,
       gross_pnl: pnl,
       total_fees: fees,
-      net_pnl: pnl - fees,
-      quantity: 0
+      net_pnl: pnl - fees
     )
+
+    self.quantity = 0
+    save!(validate: false)
   end
 
   private

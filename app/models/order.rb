@@ -1,6 +1,8 @@
 class Order < ApplicationRecord
   belongs_to :user
   belongs_to :bot, foreign_key: :bot_id
+  belongs_to :trade, optional: true
+  belongs_to :position, optional: true
   has_one :trade
 
   enum :status, {

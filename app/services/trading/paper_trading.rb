@@ -119,6 +119,8 @@ module Trading
       fees = estimated_fee
       pnl = calculate_pnl(position)
 
+      qty = position.quantity
+
       position.close!(exit_price: @price, fees: fees)
 
       opposite_side = @side == "buy" ? "sell" : "buy"
@@ -129,11 +131,11 @@ module Trading
         exchange_name: @bot.exchange_name,
         pair: @bot.pair,
         side: opposite_side,
-        quantity: position.quantity_was,
+        quantity: qty,
         price: @price,
         order_type: "limit",
         status: "filled",
-        filled_quantity: position.quantity_was,
+        filled_quantity: qty,
         filled_price: @price,
         position_id: position.id
       )
@@ -145,7 +147,7 @@ module Trading
         exchange_name: @bot.exchange_name,
         pair: @bot.pair,
         side: opposite_side,
-        quantity: position.quantity_was,
+        quantity: qty,
         entry_price: position.average_price,
         exit_price: @price,
         closed_at: Time.current,
