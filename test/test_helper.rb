@@ -9,6 +9,10 @@ module ActiveSupport
     parallelize(workers: :number_of_processors)
     fixtures :all
 
+    setup do
+      Strategy::RsiReversal
+    end
+
     def build_candle_data(closes)
       closes.map.with_index do |close, i|
         OpenStruct.new(

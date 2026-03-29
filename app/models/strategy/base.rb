@@ -1,11 +1,5 @@
 module Strategy
   module Base
-    extend ActiveSupport::Concern
-
-    included do
-      extend Strategy::Base::ClassMethods
-    end
-
     def analyze(candles, indicators: {})
       raise NotImplementedError, "#{self.class} must implement #analyze"
     end
@@ -29,25 +23,25 @@ module Strategy
     end
   end
 
-  Signal = Data.define(:type, :confidence, :reason, :suggested_price) do
-    BUY = "buy"
-    SELL = "sell"
-    HOLD = "hold"
+  BUY = "buy"
+  SELL = "sell"
+  HOLD = "hold"
 
+  Signal = Data.define(:type, :confidence, :reason, :suggested_price) do
     def initialize(type:, confidence: 0.5, reason: nil, suggested_price: nil)
       super
     end
 
     def buy?
-      type == BUY
+      type == Strategy::BUY
     end
 
     def sell?
-      type == SELL
+      type == Strategy::SELL
     end
 
     def hold?
-      type == HOLD
+      type == Strategy::HOLD
     end
 
     def strong?

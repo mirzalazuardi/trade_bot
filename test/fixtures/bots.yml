@@ -15,3 +15,12 @@ two:
   mode: semi_auto
   status: paused
   ai_enabled: true
+
+paper:
+  user: one
+  exchange_name: binance
+  pair: BTC/USDT
+  strategy: rsi_reversal
+  mode: paper_trade
+  status: active
+  ai_enabled: false

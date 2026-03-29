@@ -64,7 +64,7 @@ class TelegramController < ApplicationController
     if action == :approved
       bot = approval.bot
       signal = Strategy::Signal.new(
-        type: approval.side == "buy" ? Strategy::Signal::BUY : Strategy::Signal::SELL,
+        type: approval.side == "buy" ? Strategy::BUY : Strategy::SELL,
         confidence: approval.ml_confidence || 0.5,
         reason: "Approved via Telegram"
       )
