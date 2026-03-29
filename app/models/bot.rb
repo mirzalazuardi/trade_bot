@@ -2,6 +2,7 @@ class Bot < ApplicationRecord
   belongs_to :user
   has_many :orders
   has_many :trades
+  has_many :positions
 
   enum :mode, { auto: "auto", semi_auto: "semi_auto", paper_trade: "paper_trade", backtest: "backtest" }, prefix: true
   enum :status, { active: "active", paused: "paused", stopped: "stopped" }, prefix: true
@@ -45,5 +46,25 @@ class Bot < ApplicationRecord
 
   def strategy_class
     Strategy::Registry.get(strategy)
+  end
+
+  def risk_config
+    OpenStruct.new(
+      max_position_percent: max_position_pct || 10,
+      max_daily_loss_percent: max_daily_loss_pct || 2,
+      max_open_orders: max_open_orders || 10
+    )
+  end
+
+  def portfolio_value
+    positions.open_positions.sum { |p| p.quantity * p.current_price }
+  end
+
+  def daily_pnl
+    trades.where("closed_at > ?", Time.current.beginning_of_day).sum(:net_pnl)
+  end
+
+  def open_orders_count
+    orders.where(status: "open").count
   end
 end

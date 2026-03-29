@@ -144,18 +144,24 @@ bin/rails test
 
 ## Known Issues — Remaining Fixes
 
-### P5: Risk Management (priority: high)
-
-- **H1**: Empty stub methods in `PreTradeCheck`
-- **H2**: Balance check ignores fees
-- **H3**: `bot.risk_config` has no backing model
-
 ### P6: Backtesting UI (priority: medium)
 
 `Trading::BacktestService` exists but needs UI:
 - `BacktestsController` with `create` action
 - Form on bots#show to select date range
 - Results view with metrics
+
+### All Fixed ✅
+
+| Item | Status |
+|------|--------|
+| P5 Risk Management | ✅ FIXED |
+| H1 PreTradeCheck stubs | ✅ FIXED |
+| H2 Balance check fees | ✅ FIXED |
+| H3 risk_config model | ✅ FIXED |
+| Signal constant | ✅ FIXED |
+| Paper Trading | ✅ FIXED |
+| perform_async | ✅ FIXED |
 
 ## License
 

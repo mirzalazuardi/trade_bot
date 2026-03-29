@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_001104) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_073657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_001104) do
     t.boolean "ai_enabled", default: false
     t.datetime "created_at", null: false
     t.string "exchange_name"
+    t.decimal "max_daily_loss_pct"
+    t.integer "max_open_orders"
+    t.decimal "max_position_pct"
     t.decimal "ml_high_threshold", precision: 5, scale: 2, default: "0.8"
     t.decimal "ml_low_threshold", precision: 5, scale: 2, default: "0.3"
     t.integer "ml_model_id"

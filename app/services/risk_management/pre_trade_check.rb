@@ -28,26 +28,56 @@ module RiskManagement
       return @errors << "No active credential" unless credential
 
       balance = credential.adapter.fetch_balance
-
       required = @amount * @price
-      if @side == "buy" && balance.available_balance < required
-        @errors << "Insufficient balance: #{balance.available_balance} < #{required}"
+      estimated_fee = FeeManagement::FeeCalculator.call(
+        exchange_name: @bot.exchange_name,
+        side: @side,
+        quantity: @amount,
+        price: @price
+      ).total
+
+      total_required = required + estimated_fee
+      if @side == "buy" && balance.available_balance < total_required
+        @errors << "Insufficient balance: #{balance.available_balance} < #{total_required} (incl. fee)"
       end
     end
 
     def check_position_size
-      max_position_percent = @bot.risk_config&.max_position_percent || 10
+      max_position_percent = @bot.risk_config.max_position_percent
+      credential = @bot.user.exchange_credentials.find_by(exchange_name: @bot.exchange_name, is_active: true)
+      return unless credential
 
-      # Simplified: would need portfolio value calculation
+      balance = credential.adapter.fetch_balance.available_balance
+      position_value = @amount * @price
+      position_percent = (position_value / balance * 100).round(2)
+
+      if position_percent > max_position_percent
+        @errors << "Position size #{position_percent}% exceeds max #{max_position_percent}%"
+      end
     end
 
     def check_daily_loss_limit
-      # Simplified: would check today's PnL
+      max_daily_loss_percent = @bot.risk_config.max_daily_loss_percent
+      daily_pnl = @bot.daily_pnl
+
+      credential = @bot.user.exchange_credentials.find_by(exchange_name: @bot.exchange_name, is_active: true)
+      return unless credential
+
+      balance = credential.adapter.fetch_balance.available_balance
+      daily_loss_percent = (daily_pnl.abs / balance * 100).round(2)
+
+      if daily_pnl < 0 && daily_loss_percent >= max_daily_loss_percent
+        @errors << "Daily loss #{daily_loss_percent}% exceeds limit #{max_daily_loss_percent}%"
+      end
     end
 
     def check_max_open_orders
-      max_orders = @bot.risk_config&.max_open_orders || 10
-      # Simplified: would count open orders
+      max_orders = @bot.risk_config.max_open_orders
+      open_orders = @bot.open_orders_count
+
+      if open_orders >= max_orders
+        @errors << "Open orders #{open_orders} at max limit #{max_orders}"
+      end
     end
 
     Result = Data.define(:success, :errors) do
