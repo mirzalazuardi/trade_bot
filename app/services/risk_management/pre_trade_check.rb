@@ -13,6 +13,7 @@ module RiskManagement
     end
 
     def call
+      check_event_risk
       check_balance
       check_position_size
       check_daily_loss_limit
@@ -22,6 +23,24 @@ module RiskManagement
     end
 
     private
+
+    def check_event_risk
+      context = MarketIntelligence::MarketContext.call
+
+      if context[:calendar_risk] == :high
+        @errors << "High-impact event within 30min — trading blocked"
+      end
+
+      if context[:avoid_pairs].include?(@bot.pair)
+        @errors << "#{@bot.pair} affected by upcoming event — avoid"
+      end
+
+      if context[:size_modifier] == 0.0
+        @errors << "Market intelligence: size modifier at 0% — no trades"
+      end
+    rescue => e
+      Rails.logger.warn("Event risk check failed: #{e.message}")
+    end
 
     def check_balance
       credential = @bot.user.exchange_credentials.find_by(exchange_name: @bot.exchange_name, is_active: true)

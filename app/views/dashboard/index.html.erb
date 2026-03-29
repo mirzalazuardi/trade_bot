@@ -86,6 +86,83 @@
     </div>
   </div>
 
+  <% risk_color = { high: "bg-red-100 text-red-800", medium: "bg-yellow-100 text-yellow-800", low: "bg-green-100 text-green-800" } %>
+  <% regime_color = { risk_off: "text-red-600", mixed: "text-yellow-600", risk_on: "text-green-600" } %>
+  <% bias_color = { bearish: "text-red-600", neutral: "text-gray-600", bullish: "text-green-600" } %>
+
+  <div class="rounded-lg shadow overflow-hidden">
+    <div class="<%= @market_context[:calendar_risk] == :high ? 'bg-red-600' : @market_context[:calendar_risk] == :medium ? 'bg-yellow-500' : 'bg-gray-900' %> text-white p-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Market Intelligence</h2>
+        <div class="flex gap-3 text-sm">
+          <span>Regime: <strong class="<%= regime_color[@market_context[:risk_regime]] || 'text-gray-300' %>"><%= @market_context[:risk_regime] %></strong></span>
+          <span>Bias: <strong class="<%= bias_color[@market_context[:bias]] || 'text-gray-300' %>"><%= @market_context[:bias] %></strong></span>
+          <span>Size: <strong><%= (@market_context[:size_modifier] * 100).round %>%</strong></span>
+        </div>
+      </div>
+      <% if @market_context[:summary].present? %>
+        <p class="text-sm mt-2 opacity-90"><%= @market_context[:summary] %></p>
+      <% end %>
+    </div>
+
+    <div class="bg-white p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 class="font-semibold text-sm text-gray-500 mb-2">Upcoming Events</h3>
+          <% if @market_context[:upcoming_events].any? %>
+            <div class="space-y-1">
+              <% @market_context[:upcoming_events].first(5).each do |event| %>
+                <div class="flex justify-between text-sm">
+                  <span>
+                    <span class="px-1.5 py-0.5 rounded text-xs <%= risk_color[event[:impact]] || 'bg-gray-100' %>"><%= event[:impact] %></span>
+                    <%= event[:title] %> (<%= event[:country] %>)
+                  </span>
+                  <span class="text-gray-500"><%= event[:minutes_until] > 0 ? "in #{event[:minutes_until]}min" : "#{event[:minutes_until].abs}min ago" %></span>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No high-impact events upcoming</p>
+          <% end %>
+
+          <% if @market_context[:avoid_pairs].any? %>
+            <div class="mt-2 text-sm">
+              <span class="font-medium text-red-600">Avoid:</span>
+              <span class="text-gray-600"><%= @market_context[:avoid_pairs].join(", ") %></span>
+            </div>
+          <% end %>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-sm text-gray-500 mb-2">Polymarket Signals</h3>
+          <% if @market_context[:polymarket_signals].any? %>
+            <div class="space-y-1">
+              <% @market_context[:polymarket_signals].first(5).each do |signal| %>
+                <div class="text-sm">
+                  <span class="px-1.5 py-0.5 rounded text-xs <%= risk_color[signal[:impact]] || 'bg-gray-100' %>"><%= signal[:type] %></span>
+                  <span class="text-gray-700"><%= signal[:title].truncate(60) %></span>
+                  <span class="font-medium"><%= (signal[:probability] * 100).round %>%</span>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-400">No significant prediction market signals</p>
+          <% end %>
+
+          <% if @market_context[:polymarket_shifts].any? %>
+            <div class="mt-2 space-y-1">
+              <% @market_context[:polymarket_shifts].first(3).each do |shift| %>
+                <div class="text-sm text-orange-600">
+                  Shift: <%= shift[:question].truncate(50) %> → <strong><%= shift[:direction] %></strong> (<%= (shift[:probability] * 100).round %>%)
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="bg-white p-4 rounded-lg shadow">
     <h2 class="text-lg font-semibold mb-4">Balances</h2>
     <div class="space-y-2">

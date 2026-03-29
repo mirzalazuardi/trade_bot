@@ -11,6 +11,7 @@ class DashboardController < ApplicationController
 
     @balances = fetch_balances
     @market_prices = fetch_market_prices
+    @market_context = fetch_market_context
   end
 
   private
@@ -99,5 +100,22 @@ class DashboardController < ApplicationController
     end
 
     prices
+  end
+
+  def fetch_market_context
+    MarketIntelligence::MarketContext.call
+  rescue => e
+    Rails.logger.error("MarketContext error: #{e.message}")
+    {
+      risk_regime: :unknown,
+      calendar_risk: :unknown,
+      upcoming_events: [],
+      avoid_pairs: [],
+      polymarket_signals: [],
+      polymarket_shifts: [],
+      bias: :neutral,
+      size_modifier: 1.0,
+      summary: "Market intelligence unavailable"
+    }
   end
 end
