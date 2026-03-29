@@ -1,5 +1,10 @@
 module Trading
   class BacktestService
+    StateStruct = Struct.new(
+      :open, :high, :low, :close, :volume, :timestamp,
+      :rsi, :macd, :signal, :histogram, :sma_20, :sma_50, :bb_upper, :bb_middle, :bb_lower
+    )
+
     def self.call(bot:, from_date:, to_date:)
       new(bot: bot, from_date: from_date, to_date: to_date).call
     end
@@ -17,13 +22,14 @@ module Trading
       candles = fetch_candles
       return { error: "No candles found" } if candles.empty?
 
-      indicators = Indicators::Pipeline.build(@bot.exchange_name, @bot.pair, candles)
+      indicators = Indicators::Pipeline.build(candles)
+      indicators_hash = indicators_to_hash(indicators)
 
       candles.each_with_index do |candle, idx|
         next if idx < warmup_period
 
         state = build_state(candle, indicators, idx)
-        signal = @bot.analyze_candles([ state ], indicators: indicators)
+        signal = @bot.analyze_candles([ state ], indicators: indicators_hash)
 
         next if signal.hold?
 
@@ -37,38 +43,65 @@ module Trading
 
     private
 
+    def build_state(candle, indicators, idx)
+      StateStruct.new(
+        candle[:open],
+        candle[:high],
+        candle[:low],
+        candle[:close],
+        candle[:volume],
+        candle[:timestamp],
+        indicators.rsi && idx < indicators.rsi.size ? indicators.rsi[idx] : nil,
+        indicators.macd && idx < indicators.macd.size ? indicators.macd[idx] : nil,
+        indicators.macd_signal && idx < indicators.macd_signal.size ? indicators.macd_signal[idx] : nil,
+        indicators.macd_histogram && idx < indicators.macd_histogram.size ? indicators.macd_histogram[idx] : nil,
+        indicators.sma_20 && idx < indicators.sma_20.size ? indicators.sma_20[idx] : nil,
+        indicators.sma_50 && idx < indicators.sma_50.size ? indicators.sma_50[idx] : nil,
+        indicators.bb_upper && idx < indicators.bb_upper.size ? indicators.bb_upper[idx] : nil,
+        indicators.bb_middle && idx < indicators.bb_middle.size ? indicators.bb_middle[idx] : nil,
+        indicators.bb_lower && idx < indicators.bb_lower.size ? indicators.bb_lower[idx] : nil
+      )
+    end
+
+    def indicators_to_hash(indicators)
+      {
+        rsi: indicators.rsi,
+        macd: {
+          macd_line: indicators.macd,
+          signal_line: indicators.macd_signal,
+          histogram: indicators.macd_histogram
+        },
+        sma_20: indicators.sma_20,
+        sma_50: indicators.sma_50,
+        bb_upper: indicators.bb_upper,
+        bb_middle: indicators.bb_middle,
+        bb_lower: indicators.bb_lower
+      }
+    end
+
     def fetch_candles
-      MarketData::QueryService.call(
-        exchange_name: @bot.exchange_name,
+      interval = @bot.respond_to?(:candle_interval) ? @bot.candle_interval : "1h"
+
+      MarketData::QueryService.candles(
+        exchange: @bot.exchange_name,
         pair: @bot.pair,
-        interval: @bot.candle_interval || "1h",
+        interval: interval,
         from: @from_date,
         to: @to_date
-      ).candles
+      ).to_a.map { |c|
+        {
+          open: c.open,
+          high: c.high,
+          low: c.low,
+          close: c.close,
+          volume: c.volume,
+          timestamp: c.timestamp
+        }
+      }
     end
 
     def warmup_period
       200
-    end
-
-    def build_state(candle, indicators, idx)
-      OpenStruct.new(
-        open: candle[:open],
-        high: candle[:high],
-        low: candle[:low],
-        close: candle[:close],
-        volume: candle[:volume],
-        timestamp: candle[:timestamp],
-        rsi: indicators.dig(:rsi, idx),
-        macd: indicators.dig(:macd, idx),
-        signal: indicators.dig(:macd_signal, idx),
-        histogram: indicators.dig(:macd_histogram, idx),
-        sma_20: indicators.dig(:sma_20, idx),
-        sma_50: indicators.dig(:sma_50, idx),
-        bb_upper: indicators.dig(:bb_upper, idx),
-        bb_middle: indicators.dig(:bb_middle, idx),
-        bb_lower: indicators.dig(:bb_lower, idx)
-      )
     end
 
     def process_signal(signal, candle)
