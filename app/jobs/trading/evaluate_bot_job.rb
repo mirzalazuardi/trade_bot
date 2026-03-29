@@ -15,10 +15,8 @@ module Trading
 
       return if candles.empty?
 
-      strategy_class = bot.strategy_class
-      indicators = compute_indicators(candles, strategy_class.required_indicators)
-
-      signal = strategy_class.new.analyze(candles, indicators: indicators)
+      indicators = compute_indicators(candles, bot.required_indicators)
+      signal = bot.analyze_candles(candles, indicators: indicators)
 
       ActiveSupport::Notifications.publish("signal.generated", bot_id: bot.id, signal: signal, timeframe: timeframe)
 

@@ -23,7 +23,7 @@ module Trading
         next if idx < warmup_period
 
         state = build_state(candle, indicators, idx)
-        signal = @bot.strategy_class.analyze(state)
+        signal = @bot.analyze_candles([ state ], indicators: indicators)
 
         next if signal.hold?
 
@@ -177,9 +177,9 @@ module Trading
 
       @trades.each do |trade|
         running += trade[:pnl]
-        peak = [peak, running].max
+        peak = [ peak, running ].max
         dd = (peak - running) / peak * 100
-        max_dd = [max_dd, dd].max
+        max_dd = [ max_dd, dd ].max
       end
 
       max_dd.round(2)

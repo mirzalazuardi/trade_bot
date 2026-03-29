@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_074322) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_075358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -45,6 +45,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_074322) do
   create_table "bots", force: :cascade do |t|
     t.boolean "ai_enabled", default: false
     t.datetime "created_at", null: false
+    t.bigint "custom_strategy_id"
     t.string "exchange_name"
     t.decimal "max_daily_loss_pct"
     t.integer "max_open_orders"

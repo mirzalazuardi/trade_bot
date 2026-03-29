@@ -12,6 +12,7 @@ class BotsController < ApplicationController
   def new
     @bot = current_user.bots.new
     @strategies = Strategy::Registry.available
+    @custom_strategies = current_user.custom_strategies.order(:name)
     @exchanges = Exchanges::Registry.available
     @ml_models = current_user.ml_models.active_models if current_user.ml_models.any?
   end
@@ -23,6 +24,7 @@ class BotsController < ApplicationController
       redirect_to @bot, notice: "Bot was successfully created."
     else
       @strategies = Strategy::Registry.available
+      @custom_strategies = current_user.custom_strategies.order(:name)
       @exchanges = Exchanges::Registry.available
       render :new, status: :unprocessable_entity
     end
@@ -30,6 +32,7 @@ class BotsController < ApplicationController
 
   def edit
     @strategies = Strategy::Registry.available
+    @custom_strategies = current_user.custom_strategies.order(:name)
     @exchanges = Exchanges::Registry.available
     @ml_models = current_user.ml_models.active_models if current_user.ml_models.any?
   end
@@ -74,6 +77,6 @@ class BotsController < ApplicationController
   end
 
   def bot_params
-    params.require(:bot).permit(:exchange_name, :pair, :strategy, :mode, :ai_enabled, :ml_model_id, :ml_high_threshold, :ml_low_threshold)
+    params.require(:bot).permit(:exchange_name, :pair, :strategy, :custom_strategy_id, :mode, :ai_enabled, :ml_model_id, :ml_high_threshold, :ml_low_threshold)
   end
 end
