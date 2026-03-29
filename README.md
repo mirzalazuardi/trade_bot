@@ -75,9 +75,10 @@ telegram:
 - Telegram receives trade notifications
 - Portfolio view tracks open positions
 
-### 5. Backtesting (Optional)
-- Use `Trading::BacktestService` to run strategy on historical candles
-- View metrics: win rate, profit factor, max drawdown
+### 5. Backtest
+- Go to Bot → Run Backtest
+- Select date range and view results
+- Metrics: win rate, profit factor, max drawdown, equity curve
 
 ## Architecture
 
@@ -141,18 +142,6 @@ bin/rails ml:export_training_data[BTC/USDT,binance,2025-01-01,2026-01-01]
 ```bash
 bin/rails test
 ```
-
-## Known Issues — Remaining Fixes
-
-### All Fixed ✅
-
-| Item | Status |
-|------|--------|
-| P5 Risk Management | ✅ FIXED |
-| P6 Backtesting UI | ✅ FIXED |
-| Signal constant | ✅ FIXED |
-| Paper Trading | ✅ FIXED |
-| perform_async | ✅ FIXED |
 
 ## License
 
