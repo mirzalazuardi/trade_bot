@@ -5,7 +5,7 @@ class CustomStrategy < ApplicationRecord
   validates :config, presence: true
 
   def analyze(candles, indicators:)
-    Strategy::JsonExecutor.call(
+    Trading::Strategies::JsonExecutor.call(
       config: config,
       candles: candles,
       indicators: indicators
