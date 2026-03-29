@@ -8,7 +8,8 @@
     <h2 class="text-lg font-semibold mb-4">Import Strategy</h2>
     <%= form_with url: custom_strategies_path, multipart: true, class: "flex gap-4 items-end" do |f| %>
       <div>
-        <%= f.file :file, accept: ".json", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+        <label class="block text-sm font-medium text-gray-700">JSON File</label>
+        <input type="file" name="file" accept=".json" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
       </div>
       <div>
         <%= f.submit "Import", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
