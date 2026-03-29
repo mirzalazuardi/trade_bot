@@ -3,7 +3,7 @@ module Indicators
     def self.calculate(candles, period: 14)
       return [] if candles.empty?
 
-      closes = candles.map(&:close)
+      closes = candles.map { |c| c.respond_to?(:close) ? c.close : c[:close] }
       return [] if closes.length < period + 1
 
       gains = []

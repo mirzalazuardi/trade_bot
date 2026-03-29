@@ -1,10 +1,10 @@
 module Indicators
   module MACD
     def self.calculate(candles, fast_period: 12, slow_period: 26, signal_period: 9)
-      return [] if candles.empty?
+      return { macd_line: [], signal_line: [], histogram: [] } if candles.empty?
 
-      closes = candles.map(&:close)
-      return [] if closes.length < slow_period + signal_period
+      closes = candles.map { |c| c.respond_to?(:close) ? c.close : c[:close] }
+      return { macd_line: [], signal_line: [], histogram: [] } if closes.length < slow_period + signal_period
 
       fast_ema = ema(closes, fast_period)
       slow_ema = ema(closes, slow_period)

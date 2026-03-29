@@ -1,7 +1,7 @@
 module Indicators
   module MovingAverage
     def self.sma(candles, period:)
-      closes = candles.map(&:close)
+      closes = candles.map { |c| c.respond_to?(:close) ? c.close : c[:close] }
       return [] if closes.length < period
 
       sma_values = []
@@ -15,7 +15,7 @@ module Indicators
     end
 
     def self.ema(candles, period:)
-      closes = candles.map(&:close)
+      closes = candles.map { |c| c.respond_to?(:close) ? c.close : c[:close] }
       return [] if closes.empty?
 
       multiplier = 2.0 / (period + 1)
