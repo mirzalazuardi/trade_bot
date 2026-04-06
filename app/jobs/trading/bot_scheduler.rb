@@ -1,8 +1,8 @@
 module Trading
-  class BotScheduler
-    include SolidQueue::Job
+  class BotScheduler < ApplicationJob
+    queue_as :default
 
-    recurring_job every: "5m", retry: 3 do
+    def perform
       Bot.active_bots.find_each do |bot|
         EvaluateBotJob.perform_later(bot_id: bot.id, timeframe: "1h")
       end

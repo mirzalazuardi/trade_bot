@@ -2,25 +2,28 @@
 service: trade_bot
 
 # Name of the container image.
-image: trade_bot
+image: mirzalazuardi/trade_bot
 
-# Deploy to these servers (update with your VPS IP).
+# Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 43.157.201.245
   # Uncomment below to run Solid Queue on a separate server:
   # job:
   #   hosts:
-  #     - 192.168.0.1
+  #     - 43.157.201.245
   #   cmd: bin/jobs
 
-# Enable SSL auto certification via Let's Encrypt.
-# Uncomment and set your domain when ready to deploy.
-# Proxy handles SSL termination automatically.
+# No domain yet — accessible via http://43.157.201.245
+# When you add a domain, uncomment ssl and set host.
 proxy:
-  ssl: true
-  host: trade.yourdomain.com
+  # ssl: true
+  # host: trade.yourdomain.com
   app_port: 3000
+
+# SSH user on VPS (default is root, yours is ubuntu)
+ssh:
+  user: ubuntu
 
 # Where you keep your container images.
 registry:
@@ -40,7 +43,7 @@ env:
     SOLID_QUEUE_IN_PUMA: true
 
     # Budget VPS: 2 workers for 2GB, 1 worker for 1GB
-    WEB_CONCURRENCY: 2
+    WEB_CONCURRENCY: 1
 
     # Rails log level
     RAILS_LOG_LEVEL: info

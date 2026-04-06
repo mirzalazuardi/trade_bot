@@ -2,7 +2,7 @@ module OrderManagement
   class SyncOrdersJob < ApplicationJob
     queue_as :default
 
-    discard_on Exchange::ConnectionError
+    discard_on Exchanges::ConnectionError
 
     def perform(bot_id:)
       bot = Bot.find(bot_id)

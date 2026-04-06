@@ -29,7 +29,11 @@ module TradeBot
     config.autoload_lib(ignore: %w[assets tasks])
     config.autoload_paths << Rails.root.join("app/services/indicators")
 
-    config.eager_load_paths << Rails.root.join("app/models/exchanges")
+    initializer "trade_bot.zeitwerk" do
+      Rails.autoloaders.main.collapse(
+        Rails.root.join("app/models/exchanges/value_objects")
+      )
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #
