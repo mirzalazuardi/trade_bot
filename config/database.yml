@@ -87,9 +87,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: trade_bot_production
-    username: hermawan
-    password: password
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *primary_production
     database: trade_bot_production_cache
