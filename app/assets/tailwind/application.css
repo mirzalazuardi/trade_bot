@@ -1,1 +1,5 @@
 @import "tailwindcss";
+@source "../../../app/views";
+@source "../../../app/helpers";
+@source "../../../app/javascript";
+@source "../../../app/components";
