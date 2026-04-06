@@ -44,10 +44,7 @@ RUN bundle install && \
 
 COPY . .
 
-RUN cp app/assets/builds/tailwind.css /tmp/tailwind.css.bak 2>/dev/null; \
-    SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile; \
-    cp /tmp/tailwind.css.bak app/assets/builds/tailwind.css 2>/dev/null; \
-    rm -f /tmp/tailwind.css.bak
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 
 
